@@ -1,0 +1,92 @@
+[
+  {
+    "recipeId": "11",
+    "authorId": "101",
+    "rating": 5,
+    "imageUrl": "",
+    "comment": "Incredibly rich and perfectly executed recipe. The beef was tender and the pastry stayed crisp. Worth every minute of effort.",
+    "doTips": [
+      "Let the beef rest completely before wrapping",
+      "Use a high-quality puff pastry",
+      "Seal the layers tightly to avoid leaks"
+    ],
+    "dontTips": [
+      "Don't skip chilling before baking",
+      "Don't overcook the beef during searing"
+    ]
+  },
+  {
+    "recipeId": "11",
+    "authorId": "202",
+    "rating": 5,
+    "imageUrl": "",
+    "comment": "Amazing dish for a special occasion. The flavor combination is excellent, but it requires patience and precision.",
+    "doTips": [
+      "Use mushrooms cooked until completely dry",
+      "Chill each layer before assembling"
+    ],
+    "dontTips": [
+      "Don't rush the duxelles preparation",
+      "Don't use low-quality meat"
+    ]
+  },
+  {
+    "recipeId": "11",
+    "authorId": "303",
+    "rating": 3,
+    "imageUrl": "",
+    "comment": "Great recipe but definitely not beginner-friendly. My pastry slightly overbrowned, but taste was still excellent.",
+    "doTips": [
+      "Monitor oven temperature closely",
+      "Use foil if the pastry browns too quickly"
+    ],
+    "dontTips": [
+      "Don't leave it unattended in the oven",
+      "Don't skip egg wash for shine"
+    ]
+  },
+  {
+    "recipeId": "1",
+    "authorId": "888",
+    "rating": 5,
+    "imageUrl": "",
+    "comment": "tastes like naples",
+    "doTips": [
+      "let it cool down a bit",
+      "use a good tomato"
+    ],
+    "dontTips": [
+      "don't let it burn"
+    ]
+  },
+  {
+    "recipeId": "1",
+    "authorId": "202",
+    "rating": 4,
+    "imageUrl": "",
+    "comment": "Really authentic taste, very close to what I had in Naples. Dough texture was perfect after resting overnight.",
+    "doTips": [
+      "Let the dough ferment for at least 12 hours",
+      "Use high hydration dough for better crust"
+    ],
+    "dontTips": [
+      "Don't rush the rising time",
+      "Don't overload with toppings"
+    ]
+  },
+  {
+    "recipeId": "1",
+    "authorId": "303",
+    "rating": 3,
+    "imageUrl": "",
+    "comment": "Very good recipe overall, but I found it slightly tricky to get the crust right in a home oven.",
+    "doTips": [
+      "Preheat oven at maximum temperature for at least 30 minutes",
+      "Use a pizza stone if possible"
+    ],
+    "dontTips": [
+      "Don't use cold dough straight from the fridge",
+      "Don't skip preheating"
+    ]
+  }
+]

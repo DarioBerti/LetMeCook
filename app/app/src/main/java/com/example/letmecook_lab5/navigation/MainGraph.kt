@@ -1,0 +1,323 @@
+package com.example.letmecook_lab5.navigation
+
+import android.util.Log
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import androidx.navigation.toRoute
+import com.example.letmecook_lab5.ui.screens.community.CommunityScreen
+import com.example.letmecook_lab5.ui.screens.groceries.GroceriesScreen
+import com.example.letmecook_lab5.ui.screens.home.HomeScreen
+import com.example.letmecook_lab5.ui.screens.notifications.NotificationsScreen
+import com.example.letmecook_lab5.ui.screens.profile.ProfileScreen
+import com.example.letmecook_lab5.ui.screens.recipeList.RecipeReviewsScreen
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.letmecook_lab5.auth.SessionManagerFacade
+import com.example.letmecook_lab5.model.NotificationType
+import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
+import com.example.letmecook_lab5.ui.screens.publishedRecipes.OwnedRecipeProposalList
+import com.example.letmecook_lab5.ui.screens.recipeList.RecipePhotosScreen
+import com.example.letmecook_lab5.ui.screens.search.SearchScreen
+import com.example.letmecook_lab5.ui.screens.recipeList.ShowRecipeProposalDetailsRoute
+import com.example.letmecook_lab5.viewModel.ReviewViewModel
+import com.example.letmecook_lab5.ui.screens.savedRecipes.SavedRecipesRoute as SavedRecipesScreenRoute
+import com.example.letmecook_lab5.ui.screens.savedRecipes.CollectionDetailsRoute
+import com.example.letmecook_lab5.viewModel.ProfileViewModel
+import com.example.letmecook_lab5.viewModel.HomeScreenViewModel
+import com.example.letmecook_lab5.viewModel.NotificationViewModel
+import com.example.letmecook_lab5.viewModel.OwnedRecipeProposalListViewModel
+import com.example.letmecook_lab5.viewModel.RecipeListViewModel
+
+fun NavGraphBuilder.mainGraph(
+    navController: NavHostController
+) {
+    navigation<MainGraph>(
+        startDestination = HomeRoute
+    ) {
+
+        composable<HomeRoute> {
+            val viewModel : HomeScreenViewModel = viewModel( factory = HomeScreenViewModel.Factory)
+
+            val topTen by viewModel.topTen.collectAsStateWithLifecycle()
+            val newRecipes by viewModel.newRecipes.collectAsStateWithLifecycle()
+            val fastRecipes by viewModel.fastRecipes.collectAsStateWithLifecycle()
+
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+
+            HomeScreen(actions = MainActions(navController),
+                topTen = topTen,
+                newRecipes = newRecipes,
+                fastRecipes = fastRecipes,
+                isLogged = isLogged
+            )
+        }
+
+        composable<SearchRoute> {
+            val viewModel : RecipeListViewModel = viewModel( factory = RecipeListViewModel.Factory)
+
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val recipes by viewModel.filteredRecipes.collectAsStateWithLifecycle()
+
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+
+            SearchScreen(
+                uiState = uiState,
+                recipes = recipes,
+                onTitleChanged = viewModel::updateInputTitle,
+                onIngredientSelected = viewModel::addIngredientFilter,
+                onIngredientDeselected = viewModel::removeIngredientFilter,
+                onTagSelected = viewModel::addTagFilter,
+                onTagDeselected = viewModel::removeTagFilter,
+                onMaxCostUpdate = viewModel::updateInputMaxCost,
+                onMinCostUpdate = viewModel::updateInputMinCost,
+                onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
+                isLogged = isLogged
+            )
+        }
+
+
+        composable<CommunityRoute> {
+            CommunityScreen()
+        }
+
+        composable<GroceriesRoute> {
+            GroceriesScreen()
+        }
+
+        composable<NotificationsRoute> {
+
+            val notificationViewModel: NotificationViewModel = viewModel(
+                factory = NotificationViewModel.Factory
+            )
+
+            NotificationsScreen(
+                notificationViewModel = notificationViewModel,
+                onClick = { notification ->
+                    val relatedId = notification.relatedId
+                    Log.d("Notification", notification.toString())
+                    Log.d("RelatedIId", relatedId ?: "")
+                    when(notification.type) {
+                        NotificationType.REVIEW_RECEIVED    -> navController.navigate(RecipeDetailRoute(relatedId ?: ""))
+                        NotificationType.RECIPE_DUPLICATED  -> navController.navigate(RecipeDetailRoute(relatedId ?: ""))
+                        NotificationType.RECOMMENDATION     -> navController.navigate(RecipeDetailRoute(relatedId ?: ""))
+                        NotificationType.TEST -> Unit
+                    }
+                }
+            )
+        }
+
+
+        composable<RecipeDetailRoute> { backStackEntry ->
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+            val currentUserId = firebaseUser?.uid
+
+            val args = backStackEntry.toRoute<RecipeDetailRoute>()
+
+            val reviewViewModel: ReviewViewModel = viewModel(
+                factory = ReviewViewModel.Factory
+            )
+
+
+            ShowRecipeProposalDetailsRoute(
+                reviewViewModel = reviewViewModel,
+                onBack = { navController.popBackStack() },
+                onEdit = { navController.navigate(NewRecipeRoute(editRecipeId = args.recipeId)) },
+                onCreateNew = { navController.navigate(NewRecipeRoute(sourceRecipeId = args.recipeId)) },
+                onViewAllReviewsClick = { MainActions(navController).goViewAllReviews(args.recipeId) },
+                onViewAllPhotosClick = { MainActions(navController).goViewAllPhotos(args.recipeId) },
+                isLogged = isLogged,
+                currentUserId = currentUserId
+            )
+        }
+
+        composable<RecipeReviewsRoute> {
+            val reviewViewModel: ReviewViewModel = viewModel(
+                factory = ReviewViewModel.Factory
+            )
+            RecipeReviewsScreen(
+                reviewViewModel = reviewViewModel,
+            )
+        }
+
+        composable<RecipePhotosRoute> {
+            val reviewViewModel: ReviewViewModel = viewModel(
+                factory = ReviewViewModel.Factory
+            )
+            RecipePhotosScreen(
+                reviewViewModel = reviewViewModel
+            )
+        }
+
+        composable<SavedRecipesRoute> {
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+
+            SavedRecipesScreenRoute(
+                onBack = { navController.popBackStack() },
+                onCollectionClick = { id ->
+                    navController.navigate(CollectionDetailRoute(id))
+                },
+                onRecipeClick = { recipe ->
+                    navController.navigate(RecipeDetailRoute(recipe.id))
+                },
+                isLogged = isLogged
+            )
+        }
+
+        composable<CollectionDetailRoute> {
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+
+            CollectionDetailsRoute(
+                onBack = { navController.popBackStack() },
+                onRecipeClick = { recipe ->
+                    navController.navigate(RecipeDetailRoute(recipe.id))
+                },
+                isLogged = isLogged
+            )
+        }
+
+        /*
+        composable<ProfileRoute> {
+            val viewModel: ProfileViewModel = viewModel(
+                factory = ProfileViewModel.Factory
+            )
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            ProfileScreen(
+                uiState = uiState,
+                onEditClick = viewModel::startEditing,
+                onDoneClick = viewModel::save,
+                onCancelEdit = viewModel::cancelEditing,
+                onNameChange = viewModel::setName,
+                onNicknameChange = viewModel::setNickname,
+                onEmailChange = viewModel::setEmail,
+                onOpenCamera = viewModel::openCamera,
+                onTakePhoto = viewModel::onImageCaptured,
+                onRemovePhoto = viewModel::removePhoto,
+                onAddDietary = viewModel::addDietaryPreference,
+                onRemoveDietary = viewModel::removeDietaryPreference,
+                onAddCuisine = viewModel::addTypeOfCuisine,
+                onRemoveCuisine = viewModel::removeTypeOfCuisine,
+                onAddIngredient = viewModel::addFavoriteIngredient,
+                onRemoveIngredient = viewModel::removeFavoriteIngredient,
+                onSavedClick = { navController.navigate(SavedRecipesRoute) },
+                onCookedClick = { navController.navigate(CookedRecipesRoute) },
+                onPublishedClick = { navController.navigate(PublishedRecipesRoute) },
+                onBack = { navController.popBackStack() }
+            )
+        }
+         */
+
+        composable<ProfileRoute> {
+
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            Log.d("AUTH_UID", SessionManagerFacade.currentUser.value?.uid ?: "NULL")
+
+            val userId = firebaseUser?.uid
+
+            if (userId != null) {
+
+                val viewModel: ProfileViewModel = viewModel(
+                    factory = ProfileViewModel.Factory
+                )
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                ProfileScreen(
+                    uiState = uiState,
+                    onEditClick = viewModel::startEditing,
+                    onDoneClick = viewModel::save,
+                    onCancelEdit = viewModel::cancelEditing,
+                    onNameChange = viewModel::setName,
+                    onNicknameChange = viewModel::setNickname,
+                    onEmailChange = viewModel::setEmail,
+                    onOpenCamera = viewModel::openCamera,
+                    onTakePhoto = viewModel::onImageCaptured,
+                    onRemovePhoto = viewModel::removePhoto,
+                    onAddDietary = viewModel::addDietaryPreference,
+                    onRemoveDietary = viewModel::removeDietaryPreference,
+                    onAddCuisine = viewModel::addTypeOfCuisine,
+                    onRemoveCuisine = viewModel::removeTypeOfCuisine,
+                    onAddIngredient = viewModel::addFavoriteIngredient,
+                    onRemoveIngredient = viewModel::removeFavoriteIngredient,
+                    onSavedClick = { navController.navigate(SavedRecipesRoute) },
+                    onCookedClick = { navController.navigate(CookedRecipesRoute) },
+                    onPublishedClick = { navController.navigate(PublishedRecipesRoute) },
+                    onBack = { navController.popBackStack() },
+                    onLogoutClick = { SessionManagerFacade.signOut()}
+                )
+            }
+        }
+
+        composable<PublishedRecipesRoute> {
+            val viewModel : OwnedRecipeProposalListViewModel = viewModel(
+                factory = OwnedRecipeProposalListViewModel.Factory
+            )
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val recipes by viewModel.filteredRecipes.collectAsStateWithLifecycle()
+
+            OwnedRecipeProposalList (
+                uiState = uiState,
+                recipes = recipes,
+                onTitleChanged = { viewModel.updateInputTitle(it) },
+                onIngredientSelected = { viewModel.addIngredientFilter(it) },
+                onIngredientDeselected = { viewModel.removeIngredientFilter(it) },
+                onTagSelected = { viewModel.addTagFilter(it) },
+                onTagDeselected = { viewModel.removeTagFilter(it) },
+                onMaxCostUpdate = { viewModel.updateInputMaxCost(it) },
+                onMinCostUpdate = { viewModel.updateInputMinCost(it) },
+                onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
+                onNewRecipeClick = { navController.navigate(NewRecipeRoute()) }
+            )
+        }
+
+
+        composable<CookedRecipesRoute> {
+            CookedRecipesScreen()
+        }
+
+        /*
+        dialog<LoginToProceedDialogRoute> {
+            LoginToProceedDialogRoute(
+                onDismiss = {navController.popBackStack()},
+                onLoginSuccess = {navController.popBackStack()}
+            )
+        }
+
+         */
+
+/*
+        composable<FavoritesRoute> {
+            FavoritesScreen(actions = MainActions(navController))
+        }
+
+        composable<ReviewHistoryRoute> {
+            ReviewHistoryScreen(actions = MainActions(navController))
+        }
+ */
+    }
+}

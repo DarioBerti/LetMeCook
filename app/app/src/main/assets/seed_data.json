@@ -1,0 +1,529 @@
+[
+  {
+    "id": "11",
+    "ownerId": "204",
+    "title": "Classic Beef Wellington",
+    "imageUrl": "",
+    "averageRating": 4.3,
+    "tags": ["luxury", "dinner", "baking"],
+    "difficulty": "Hard",
+    "cookingTime": 120,
+    "calories": 950,
+    "servings": 4,
+    "cost": 45.0,
+    "ingredients": [
+      { "name": "Beef tenderloin", "quantity": 800.0, "unit": "g" },
+      { "name": "Puff pastry", "quantity": 500.0, "unit": "g" },
+      { "name": "Mushrooms", "quantity": 400.0, "unit": "g" },
+      { "name": "Prosciutto", "quantity": 100.0, "unit": "g" },
+      { "name": "Egg", "quantity": 1.0, "unit": "pcs" }
+    ],
+    "steps": [
+      { "title": "Sear beef", "photo": null, "description": "Quickly sear the beef tenderloin on all sides in a hot pan. Let it cool." },
+      { "title": "Make duxelles", "photo": null, "description": "Finely chop mushrooms and cook until all moisture evaporates." },
+      { "title": "Wrap", "photo": null, "description": "Layer prosciutto, duxelles, and beef. Wrap tightly in puff pastry and brush with egg wash." },
+      { "title": "Bake", "photo": null, "description": "Bake at 200°C for 35 minutes until pastry is golden brown." }
+    ],
+    "storageInstructions": "Wrap in foil and refrigerate up to 2 days. Do not freeze once assembled.",
+    "reviews": [
+      {
+        "recipeId": "11",
+        "authorId": "101",
+        "rating": 5,
+        "imageUrl": "",
+        "comment": "Incredibly rich and perfectly executed recipe. The beef was tender and the pastry stayed crisp. Worth every minute of effort.",
+        "doTips": ["Let the beef rest completely before wrapping", "Use a high-quality puff pastry", "Seal the layers tightly to avoid leaks"],
+        "dontTips": ["Don't skip chilling before baking", "Don't overcook the beef during searing"]
+      },
+      {
+        "recipeId": "11",
+        "authorId": "202",
+        "rating": 5,
+        "imageUrl": "",
+        "comment": "Amazing dish for a special occasion. The flavor combination is excellent, but it requires patience and precision.",
+        "doTips": ["Use mushrooms cooked until completely dry", "Chill each layer before assembling"],
+        "dontTips": ["Don't rush the duxelles preparation", "Don't use low-quality meat"]
+      },
+      {
+        "recipeId": "11",
+        "authorId": "303",
+        "rating": 3,
+        "imageUrl": "",
+        "comment": "Great recipe but definitely not beginner-friendly. My pastry slightly overbrowned, but taste was still excellent.",
+        "doTips": ["Monitor oven temperature closely", "Use foil if the pastry browns too quickly"],
+        "dontTips": ["Don't leave it unattended in the oven", "Don't skip egg wash for shine"]
+      }
+    ]
+  },
+  {
+    "id": "12",
+    "ownerId": "312",
+    "title": "Vegan Lentil Curry",
+    "imageUrl": "",
+    "averageRating": 4.5,
+    "tags": ["vegan", "healthy", "dinner"],
+    "difficulty": "Easy",
+    "cookingTime": 40,
+    "calories": 380,
+    "servings": 3,
+    "cost": 4.5,
+    "ingredients": [
+      { "name": "Red lentils", "quantity": 200.0, "unit": "g" },
+      { "name": "Coconut milk", "quantity": 400.0, "unit": "ml" },
+      { "name": "Curry powder", "quantity": 2.0, "unit": "tbsp" },
+      { "name": "Spinach", "quantity": 150.0, "unit": "g" },
+      { "name": "Onion", "quantity": 1.0, "unit": "pcs" }
+    ],
+    "steps": [
+      { "title": "Sauté aromatics", "photo": null, "description": "Cook diced onion with curry powder until fragrant." },
+      { "title": "Simmer", "photo": null, "description": "Add lentils and coconut milk. Simmer for 25 minutes until lentils are soft." },
+      { "title": "Add greens", "photo": null, "description": "Stir in fresh spinach and cook for 2 more minutes until wilted." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "13",
+    "ownerId": "155",
+    "title": "Authentic Tiramisu",
+    "imageUrl": "",
+    "averageRating": 4.9,
+    "tags": ["dessert", "italian", "sweet", "coffee"],
+    "difficulty": "Medium",
+    "cookingTime": 30,
+    "calories": 450,
+    "servings": 6,
+    "cost": 12.0,
+    "ingredients": [
+      { "name": "Mascarpone cheese", "quantity": 500.0, "unit": "g" },
+      { "name": "Ladyfingers (Savoiardi)", "quantity": 300.0, "unit": "g" },
+      { "name": "Espresso coffee", "quantity": 300.0, "unit": "ml" },
+      { "name": "Eggs", "quantity": 4.0, "unit": "pcs" },
+      { "name": "Cocoa powder", "quantity": 20.0, "unit": "g" }
+    ],
+    "steps": [
+      { "title": "Make cream", "photo": null, "description": "Whip egg yolks with sugar, then fold in mascarpone. Fold in whipped egg whites gently." },
+      { "title": "Dip cookies", "photo": null, "description": "Quickly dip ladyfingers into cold espresso and layer them in a dish." },
+      { "title": "Layer and chill", "photo": null, "description": "Alternate layers of cookies and cream. Chill overnight and dust with cocoa powder before serving." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "14",
+    "ownerId": "402",
+    "title": "Spicy Tuna Sushi Roll",
+    "imageUrl": "",
+    "averageRating": 4.6,
+    "tags": ["appetizer", "dinner", "raw"],
+    "difficulty": "Hard",
+    "cookingTime": 50,
+    "calories": 350,
+    "servings": 2,
+    "cost": 15.5,
+    "ingredients": [
+      { "name": "Sushi rice", "quantity": 200.0, "unit": "g" },
+      { "name": "Nori seaweed", "quantity": 2.0, "unit": "sheets" },
+      { "name": "Sashimi tuna", "quantity": 150.0, "unit": "g" },
+      { "name": "Sriracha mayo", "quantity": 2.0, "unit": "tbsp" },
+      { "name": "Cucumber", "quantity": 0.5, "unit": "pcs" }
+    ],
+    "steps": [
+      { "title": "Prep rice", "photo": null, "description": "Cook sushi rice and season with rice vinegar. Let it cool." },
+      { "title": "Mix tuna", "photo": null, "description": "Chop the tuna finely and mix with sriracha mayo." },
+      { "title": "Roll", "photo": null, "description": "Spread rice on nori, add tuna and cucumber sticks. Roll tightly using a bamboo mat." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "15",
+    "ownerId": "289",
+    "title": "Classic French Omelette",
+    "imageUrl": "",
+    "averageRating": 4.4,
+    "tags": ["breakfast", "quick"],
+    "difficulty": "Medium",
+    "cookingTime": 5,
+    "calories": 280,
+    "servings": 1,
+    "cost": 2.0,
+    "ingredients": [
+      { "name": "Eggs", "quantity": 3.0, "unit": "pcs" },
+      { "name": "Unsalted butter", "quantity": 20.0, "unit": "g" },
+      { "name": "Chives", "quantity": 5.0, "unit": "g" },
+      { "name": "Salt", "quantity": 1.0, "unit": "pinch" },
+      { "name": "White pepper", "quantity": 1.0, "unit": "pinch" }
+    ],
+    "steps": [
+      { "title": "Beat eggs", "photo": null, "description": "Whisk eggs vigorously until completely smooth with no visible whites." },
+      { "title": "Cook slowly", "photo": null, "description": "Melt butter in a non-stick pan over medium-low heat. Add eggs and stir constantly." },
+      { "title": "Roll and serve", "photo": null, "description": "When mostly set but still creamy on top, roll the omelette carefully and serve with chives." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "16",
+    "ownerId": "501",
+    "title": "BBQ Pulled Pork Sandwich",
+    "imageUrl": "",
+    "averageRating": 4.7,
+    "tags": ["american", "lunch", "comfort"],
+    "difficulty": "Easy",
+    "cookingTime": 480,
+    "calories": 700,
+    "servings": 6,
+    "cost": 18.0,
+    "ingredients": [
+      { "name": "Pork shoulder", "quantity": 1.5, "unit": "kg" },
+      { "name": "BBQ sauce", "quantity": 300.0, "unit": "ml" },
+      { "name": "Brioche buns", "quantity": 6.0, "unit": "pcs" },
+      { "name": "Coleslaw", "quantity": 200.0, "unit": "g" },
+      { "name": "Paprika", "quantity": 2.0, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "title": "Slow cook", "photo": null, "description": "Rub pork with spices and slow cook on low for 8 hours until fork-tender." },
+      { "title": "Shred", "photo": null, "description": "Remove pork, shred it with two forks, and mix generously with BBQ sauce." },
+      { "title": "Assemble", "photo": null, "description": "Toast the buns, add a mountain of pulled pork, and top with fresh coleslaw." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "17",
+    "ownerId": "109",
+    "title": "Traditional Greek Salad",
+    "imageUrl": "",
+    "averageRating": 4.6,
+    "tags": ["salad", "vegetarian", "healthy"],
+    "difficulty": "Easy",
+    "cookingTime": 10,
+    "calories": 300,
+    "servings": 2,
+    "cost": 7.5,
+    "ingredients": [
+      { "name": "Tomatoes", "quantity": 3.0, "unit": "pcs" },
+      { "name": "Cucumber", "quantity": 1.0, "unit": "pcs" },
+      { "name": "Feta cheese", "quantity": 150.0, "unit": "g" },
+      { "name": "Kalamata olives", "quantity": 50.0, "unit": "g" },
+      { "name": "Extra virgin olive oil", "quantity": 3.0, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "title": "Chop veggies", "photo": null, "description": "Cut tomatoes into wedges and slice the cucumber thickly." },
+      { "title": "Combine", "photo": null, "description": "Place veggies in a bowl, add olives, and top with a whole block of feta cheese." },
+      { "title": "Dress", "photo": null, "description": "Drizzle generously with olive oil and sprinkle with dried oregano. Do not mix until serving." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "18",
+    "ownerId": "888",
+    "title": "Chicken Tikka Masala",
+    "imageUrl": "",
+    "averageRating": 4.8,
+    "tags": ["indian", "dinner", "spicy"],
+    "difficulty": "Medium",
+    "cookingTime": 60,
+    "calories": 600,
+    "servings": 4,
+    "cost": 14.0,
+    "ingredients": [
+      { "name": "Chicken thighs", "quantity": 600.0, "unit": "g" },
+      { "name": "Yogurt", "quantity": 150.0, "unit": "g" },
+      { "name": "Tomato passata", "quantity": 400.0, "unit": "ml" },
+      { "name": "Heavy cream", "quantity": 100.0, "unit": "ml" },
+      { "name": "Garam masala", "quantity": 2.0, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "title": "Marinate", "photo": null, "description": "Marinate chicken chunks in yogurt and spices for at least 30 minutes." },
+      { "title": "Cook chicken", "photo": null, "description": "Brown the chicken in a hot pan, then set aside." },
+      { "title": "Make sauce", "photo": null, "description": "Simmer tomato passata with spices, add the chicken back in, and finish with heavy cream." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "1",
+    "ownerId": "101",
+    "title": "Classic Margherita Pizza",
+    "imageUrl": "",
+    "averageRating": 4.0,
+    "tags": ["italian", "vegetarian", "dinner"],
+    "difficulty": "Medium",
+    "cookingTime": 90,
+    "calories": 850,
+    "servings": 2,
+    "cost": 4.5,
+    "ingredients": [
+      { "name": "Pizza dough", "quantity": 400.0, "unit": "g" },
+      { "name": "Tomato sauce", "quantity": 150.0, "unit": "ml" },
+      { "name": "Fresh mozzarella", "quantity": 125.0, "unit": "g" },
+      { "name": "Fresh basil", "quantity": 5.0, "unit": "leaves" },
+      { "name": "Olive oil", "quantity": 1.0, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "title": "Preheat oven", "photo": null, "description": "Preheat your oven to the maximum temperature (usually 250°C)." },
+      { "title": "Shape dough", "photo": null, "description": "Stretch the pizza dough into a round shape on a floured surface." },
+      { "title": "Add toppings", "photo": null, "description": "Spread tomato sauce, add torn mozzarella, and drizzle with olive oil." },
+      { "title": "Bake", "photo": null, "description": "Bake for 10-12 minutes until the crust is golden. Add basil before serving." }
+    ],
+    "reviews": [
+      {
+        "recipeId": "1",
+        "authorId": "888",
+        "rating": 5,
+        "imageUrl": "",
+        "comment": "tastes like naples",
+        "doTips": ["let it cool down a bit", "use a good tomato"],
+        "dontTips": ["don't let it burn"]
+      },
+      {
+        "recipeId": "1",
+        "authorId": "202",
+        "rating": 4,
+        "imageUrl": "",
+        "comment": "Really authentic taste, very close to what I had in Naples. Dough texture was perfect after resting overnight.",
+        "doTips": ["Let the dough ferment for at least 12 hours", "Use high hydration dough for better crust"],
+        "dontTips": ["Don't rush the rising time", "Don't overload with toppings"]
+      },
+      {
+        "recipeId": "1",
+        "authorId": "303",
+        "rating": 3,
+        "imageUrl": "",
+        "comment": "Very good recipe overall, but I found it slightly tricky to get the crust right in a home oven.",
+        "doTips": ["Preheat oven at maximum temperature for at least 30 minutes", "Use a pizza stone if possible"],
+        "dontTips": ["Don't use cold dough straight from the fridge", "Don't skip preheating"]
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "ownerId": "101",
+    "title": "Grilled Chicken Caesar Salad",
+    "imageUrl": "",
+    "averageRating": 4.5,
+    "tags": ["healthy", "lunch"],
+    "difficulty": "Easy",
+    "cookingTime": 20,
+    "calories": 450,
+    "servings": 1,
+    "cost": 8.5,
+    "ingredients": [
+      { "name": "Chicken breast", "quantity": 150.0, "unit": "g" },
+      { "name": "Romaine lettuce", "quantity": 100.0, "unit": "g" },
+      { "name": "Parmesan cheese", "quantity": 30.0, "unit": "g" },
+      { "name": "Croutons", "quantity": 40.0, "unit": "g" },
+      { "name": "Caesar dressing", "quantity": 2.0, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "title": "Grill chicken", "photo": null, "description": "Season chicken and grill until cooked through. Slice into strips." },
+      { "title": "Prepare greens", "photo": null, "description": "Chop the lettuce and place it in a large bowl." },
+      { "title": "Assemble", "photo": null, "description": "Top lettuce with chicken, croutons, and parmesan. Drizzle with dressing." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "3",
+    "ownerId": "101",
+    "title": "Bluefin Tuna Tartare",
+    "imageUrl": "",
+    "averageRating": 4.7,
+    "tags": ["raw", "appetizer", "gourmet"],
+    "difficulty": "Medium",
+    "cookingTime": 15,
+    "calories": 320,
+    "servings": 2,
+    "cost": 18.0,
+    "ingredients": [
+      { "name": "Sashimi-grade Bluefin Tuna", "quantity": 250.0, "unit": "g" },
+      { "name": "Avocado", "quantity": 1.0, "unit": "pcs" },
+      { "name": "Soy sauce", "quantity": 2.0, "unit": "tbsp" },
+      { "name": "Sesame oil", "quantity": 1.0, "unit": "tsp" },
+      { "name": "Lime juice", "quantity": 1.0, "unit": "tbsp" }
+    ],
+    "steps": [
+      { "title": "Dice tuna", "photo": null, "description": "Carefully dice the fresh tuna into small, even cubes." },
+      { "title": "Prepare avocado", "photo": null, "description": "Dice the avocado and gently mix with lime juice." },
+      { "title": "Season", "photo": null, "description": "Mix tuna with soy sauce and sesame oil. Plate using a ring mold." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "4",
+    "ownerId": "101",
+    "title": "Spaghetti Aglio e Olio",
+    "imageUrl": "",
+    "averageRating": 4.6,
+    "tags": ["italian", "pasta", "quick", "cheap"],
+    "difficulty": "Easy",
+    "cookingTime": 15,
+    "calories": 400,
+    "servings": 2,
+    "cost": 2.5,
+    "ingredients": [
+      { "name": "Spaghetti", "quantity": 200.0, "unit": "g" },
+      { "name": "Olive oil", "quantity": 5.0, "unit": "tbsp" },
+      { "name": "Garlic", "quantity": 4.0, "unit": "cloves" },
+      { "name": "Red pepper flakes", "quantity": 1.0, "unit": "tsp" },
+      { "name": "Parsley", "quantity": 10.0, "unit": "g" }
+    ],
+    "steps": [
+      { "title": "Boil pasta", "photo": null, "description": "Cook spaghetti in salted water until al dente." },
+      { "title": "Prepare oil", "photo": null, "description": "Gently heat olive oil and thinly sliced garlic in a pan until golden." },
+      { "title": "Mix", "photo": null, "description": "Add red pepper flakes, drained pasta, and a splash of pasta water. Toss with parsley." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "5",
+    "ownerId": "101",
+    "title": "Black Truffle & Porcini Risotto",
+    "imageUrl": "",
+    "averageRating": 4.8,
+    "tags": ["italian", "rice", "gourmet", "luxury"],
+    "difficulty": "Hard",
+    "cookingTime": 45,
+    "calories": 650,
+    "servings": 2,
+    "cost": 28.0,
+    "ingredients": [
+      { "name": "Carnaroli rice", "quantity": 160.0, "unit": "g" },
+      { "name": "Fresh Porcini mushrooms", "quantity": 200.0, "unit": "g" },
+      { "name": "Black Truffle shavings", "quantity": 15.0, "unit": "g" },
+      { "name": "Aged Parmesan", "quantity": 60.0, "unit": "g" },
+      { "name": "Beef broth", "quantity": 0.8, "unit": "L" }
+    ],
+    "steps": [
+      { "title": "Toast rice", "photo": null, "description": "Toast rice in a dry pan, then start adding hot broth ladle by ladle." },
+      { "title": "Add porcini", "photo": null, "description": "Midway through cooking, add the sautéed porcini mushrooms." },
+      { "title": "Mantecatura", "photo": null, "description": "Remove from heat, stir in cold butter and parmesan. Shave fresh truffle on top." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "6",
+    "ownerId": "101",
+    "title": "Pancakes with Maple Syrup",
+    "imageUrl": "",
+    "averageRating": 4.9,
+    "tags": ["breakfast", "sweet", "american"],
+    "difficulty": "Easy",
+    "cookingTime": 20,
+    "calories": 350,
+    "servings": 3,
+    "cost": 5.0,
+    "ingredients": [
+      { "name": "Flour", "quantity": 150.0, "unit": "g" },
+      { "name": "Milk", "quantity": 200.0, "unit": "ml" },
+      { "name": "Egg", "quantity": 1.0, "unit": "pcs" },
+      { "name": "Baking powder", "quantity": 1.0, "unit": "tsp" },
+      { "name": "Maple syrup", "quantity": 50.0, "unit": "ml" }
+    ],
+    "steps": [
+      { "title": "Mix batter", "photo": null, "description": "Whisk flour, baking powder, milk, and egg until smooth." },
+      { "title": "Cook", "photo": null, "description": "Pour batter onto a hot buttered pan. Flip when bubbles form." },
+      { "title": "Serve", "photo": null, "description": "Stack pancakes and pour maple syrup generously." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "7",
+    "ownerId": "101",
+    "title": "Garlic Butter Lobster Tail",
+    "imageUrl": "",
+    "averageRating": 4.7,
+    "tags": ["seafood", "luxury", "dinner", "keto"],
+    "difficulty": "Medium",
+    "cookingTime": 20,
+    "calories": 420,
+    "servings": 2,
+    "cost": 32.0,
+    "ingredients": [
+      { "name": "Lobster tails", "quantity": 2.0, "unit": "pcs" },
+      { "name": "Butter", "quantity": 100.0, "unit": "g" },
+      { "name": "Garlic", "quantity": 3.0, "unit": "cloves" },
+      { "name": "Lemon", "quantity": 1.0, "unit": "pcs" },
+      { "name": "Parsley", "quantity": 10.0, "unit": "g" }
+    ],
+    "steps": [
+      { "title": "Butterfly lobster", "photo": null, "description": "Cut the shell down the back and lift the meat to rest on top of the shell." },
+      { "title": "Make garlic butter", "photo": null, "description": "Melt butter and mix with minced garlic, parsley, and lemon juice." },
+      { "title": "Broil", "photo": null, "description": "Brush lobster heavily with butter and broil for 8-10 minutes until meat is opaque." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "8",
+    "ownerId": "101",
+    "title": "Avocado Toast with Poached Egg",
+    "imageUrl": "",
+    "averageRating": 4.6,
+    "tags": ["breakfast", "brunch", "healthy", "vegetarian"],
+    "difficulty": "Medium",
+    "cookingTime": 10,
+    "calories": 380,
+    "servings": 1,
+    "cost": 6.5,
+    "ingredients": [
+      { "name": "Sourdough bread", "quantity": 1.0, "unit": "slice" },
+      { "name": "Avocado", "quantity": 0.5, "unit": "pcs" },
+      { "name": "Egg", "quantity": 1.0, "unit": "pcs" },
+      { "name": "Chili flakes", "quantity": 0.5, "unit": "tsp" },
+      { "name": "Lemon juice", "quantity": 1.0, "unit": "tsp" }
+    ],
+    "steps": [
+      { "title": "Toast bread", "photo": null, "description": "Toast the sourdough slice until crispy." },
+      { "title": "Mash avocado", "photo": null, "description": "Mash avocado with lemon juice, salt, and pepper." },
+      { "title": "Poach egg", "photo": null, "description": "Create a whirlpool in simmering water, drop the egg, cook for 3 mins." },
+      { "title": "Assemble", "photo": null, "description": "Spread avocado on toast, top with poached egg and chili flakes." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "9",
+    "ownerId": "101",
+    "title": "Chocolate Chip Cookies",
+    "imageUrl": "",
+    "averageRating": 4.9,
+    "tags": ["dessert", "baking", "sweet", "snack"],
+    "difficulty": "Medium",
+    "cookingTime": 30,
+    "calories": 250,
+    "servings": 12,
+    "cost": 4.0,
+    "ingredients": [
+      { "name": "Flour", "quantity": 250.0, "unit": "g" },
+      { "name": "Butter", "quantity": 150.0, "unit": "g" },
+      { "name": "Brown sugar", "quantity": 100.0, "unit": "g" },
+      { "name": "Chocolate chips", "quantity": 200.0, "unit": "g" },
+      { "name": "Vanilla extract", "quantity": 1.0, "unit": "tsp" }
+    ],
+    "steps": [
+      { "title": "Cream butter", "photo": null, "description": "Beat softened butter with sugar until creamy. Add vanilla." },
+      { "title": "Add dry ingredients", "photo": null, "description": "Mix in flour until just combined, then fold in chocolate chips." },
+      { "title": "Bake", "photo": null, "description": "Form dough balls and bake at 180°C for 10-12 minutes. Let cool." }
+    ],
+    "reviews": []
+  },
+  {
+    "id": "10",
+    "ownerId": "101",
+    "title": "Seared A5 Wagyu Ribeye",
+    "imageUrl": "",
+    "averageRating": 5.0,
+    "tags": ["beef", "luxury", "steak", "dinner"],
+    "difficulty": "Medium",
+    "cookingTime": 10,
+    "calories": 800,
+    "servings": 2,
+    "cost": 39.5,
+    "ingredients": [
+      { "name": "A5 Wagyu Ribeye Steak", "quantity": 200.0, "unit": "g" },
+      { "name": "Flaky sea salt", "quantity": 1.0, "unit": "tsp" },
+      { "name": "Freshly ground black pepper", "quantity": 0.5, "unit": "tsp" },
+      { "name": "Garlic", "quantity": 2.0, "unit": "cloves" }
+    ],
+    "steps": [
+      { "title": "Prep pan", "photo": null, "description": "Heat a cast-iron skillet until it is smoking hot. No oil needed as Wagyu is highly marbled." },
+      { "title": "Sear", "photo": null, "description": "Sear the steak for exactly 60-90 seconds per side for a perfect medium-rare." },
+      { "title": "Rest", "photo": null, "description": "Remove from heat, let it rest for 5 minutes, then slice thinly and top with flaky salt." }
+    ],
+    "reviews": []
+  }
+]

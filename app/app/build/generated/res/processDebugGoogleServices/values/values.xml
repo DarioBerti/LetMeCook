@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">974389645416-qgt008fm8fr1abnj3absl53f9r4ljrp3.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">974389645416</string>
+    <string name="google_api_key" translatable="false">AIzaSyDlCyJVs8jCosnqdW0Dpg2kl6zMWTKghtM</string>
+    <string name="google_app_id" translatable="false">1:974389645416:android:54311c7b561f6f71baebdd</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDlCyJVs8jCosnqdW0Dpg2kl6zMWTKghtM</string>
+    <string name="google_storage_bucket" translatable="false">letmecook-d3112.firebasestorage.app</string>
+    <string name="project_id" translatable="false">letmecook-d3112</string>
+</resources>

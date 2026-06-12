@@ -1,0 +1,26 @@
+[
+  {
+    "id": "101",
+    "fullName": "Luca Rossi",
+    "nickname": "LukeCook",
+    "email": "lucarossi@gmail.com",
+    "cookingRole": "Home Chef",
+    "followers": 120,
+    "following": 80,
+    "dietaryPreferences": [
+      "Vegetarian"
+    ],
+    "typesOfCuisine": [
+      "Italian",
+      "Japanese"
+    ],
+    "favoriteIngredients": [
+      "Tomato",
+      "Basil"
+    ],
+    "savedRecipesIds": [
+      "1",
+      "2"
+    ]
+  }
+]

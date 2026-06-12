@@ -1,0 +1,20 @@
+[
+  {
+    "id": "1",
+    "name": "Saved",
+    "ownerId": "101",
+    "description": "All my favorite recipes in one place"
+  },
+  {
+    "id": "2",
+    "name": "Lunch ideas",
+    "ownerId": "101",
+    "description": "Quick meals for busy days"
+  },
+  {
+    "id": "3",
+    "name": "Weekend cooking",
+    "ownerId": "101",
+    "description": "Recipes worth taking time for"
+  }
+]

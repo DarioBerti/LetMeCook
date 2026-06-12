@@ -1,0 +1,37 @@
+# Cache, build e file temporanei di Gradle
+.gradle/
+/build/
+*/build/
+gradle-app.setting
+
+# Impostazioni locali (come il percorso dell'SDK sul tuo PC)
+local.properties
+
+# File specifici di Android Studio / IntelliJ IDEA
+.idea/
+.navigation/
+captures/
+*.iml
+*.ipr
+*.iws
+
+# File generati e pacchetti compilati
+*.apk
+*.ap_
+*.aab
+*.dex
+*.class
+bin/
+gen/
+out/
+
+# Keystore per la firma dell'app (per motivi di sicurezza non vanno MAI messi su Git)
+*.jks
+*.keystore
+
+# File di sistema del computer (Mac / Windows)
+.DS_Store
+Thumbs.db
+
+# Configurazione del Wrapper di Gradle (Manteniamo il jar e script, ignoriamo il resto)
+!gradle/wrapper/gradle-wrapper.jar
