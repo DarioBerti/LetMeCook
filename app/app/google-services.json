@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "974389645416",
+    "project_id": "letmecook-d3112",
+    "storage_bucket": "letmecook-d3112.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:974389645416:android:54311c7b561f6f71baebdd",
+        "android_client_info": {
+          "package_name": "com.example.letmecook_lab5"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "974389645416-5tlg785inie8m5paosq4pt7hobh8lglf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.letmecook_lab5",
+            "certificate_hash": "c0dbd7bbde4453e1a47fbc2efd7f93a3103a0d63"
+          }
+        },
+        {
+          "client_id": "974389645416-autguo32vmc681dg47jbl7s27lnqk282.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.letmecook_lab5",
+            "certificate_hash": "d3b643528a8eab957c96f27348f12e073f8707d7"
+          }
+        },
+        {
+          "client_id": "974389645416-jp5mg7fsdd29q810htpr72i2csrl770g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.letmecook_lab5",
+            "certificate_hash": "b465048b81041506b00f44661affeaeca465a3fd"
+          }
+        },
+        {
+          "client_id": "974389645416-m3dogvkde9as8csic6cs01u90i88gtij.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.letmecook_lab5",
+            "certificate_hash": "922e7c9dcb451fce17179d86443804c645169b5b"
+          }
+        },
+        {
+          "client_id": "974389645416-qgt008fm8fr1abnj3absl53f9r4ljrp3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlCyJVs8jCosnqdW0Dpg2kl6zMWTKghtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "974389645416-qgt008fm8fr1abnj3absl53f9r4ljrp3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
