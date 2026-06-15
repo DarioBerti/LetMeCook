@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.NotificationType
+import com.example.letmecook_lab5.ui.screens.groceries.GroceriesPlaceholder
 import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
 import com.example.letmecook_lab5.ui.screens.publishedRecipes.OwnedRecipeProposalList
 import com.example.letmecook_lab5.ui.screens.recipeList.RecipePhotosScreen
@@ -25,6 +26,7 @@ import com.example.letmecook_lab5.ui.screens.recipeList.ShowRecipeProposalDetail
 import com.example.letmecook_lab5.viewModel.ReviewViewModel
 import com.example.letmecook_lab5.ui.screens.savedRecipes.SavedRecipesRoute as SavedRecipesScreenRoute
 import com.example.letmecook_lab5.ui.screens.savedRecipes.CollectionDetailsRoute
+import com.example.letmecook_lab5.viewModel.GroceriesViewModel
 import com.example.letmecook_lab5.viewModel.ProfileViewModel
 import com.example.letmecook_lab5.viewModel.HomeScreenViewModel
 import com.example.letmecook_lab5.viewModel.NotificationViewModel
@@ -92,7 +94,31 @@ fun NavGraphBuilder.mainGraph(
         }
 
         composable<GroceriesRoute> {
-            GroceriesScreen()
+            val groceriesViewModel: GroceriesViewModel = viewModel(
+                factory = GroceriesViewModel.Factory
+            )
+            val groceriesByRecipes by groceriesViewModel.cartItems.collectAsStateWithLifecycle()
+            val uiState by groceriesViewModel.uiState.collectAsStateWithLifecycle()
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+            val isLogged = firebaseUser?.isAnonymous == false
+            val currentUserId = firebaseUser?.uid
+
+            if (!isLogged){
+                GroceriesPlaceholder()
+            }
+            else if (currentUserId != null) {
+                GroceriesScreen(
+                    uiState = uiState,
+                    groceriesByRecipes,
+                    updateRecipeServings = groceriesViewModel::updateRecipeServings,
+                    toggleIsChecked = groceriesViewModel::toggleIsChecked,
+                    onTabSelected = groceriesViewModel::onTabSelected,
+                    onRecipeDelete = groceriesViewModel::deleteRecipe,
+                    onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) }
+                )
+            }
         }
 
         composable<NotificationsRoute> {

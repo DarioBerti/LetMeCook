@@ -1,6 +1,7 @@
 package com.example.letmecook_lab5.domain
 
 object Collections {
+    const val GROCERIES : String = "groceries"
     const val COLLECTIONS: String = "collections"
     const val USERS: String = "users"
     const val RECIPES = "recipes"

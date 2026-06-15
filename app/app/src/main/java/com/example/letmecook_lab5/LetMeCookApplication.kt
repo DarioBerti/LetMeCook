@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import com.example.letmecook_lab5.repository.AppContainer
 import com.example.letmecook_lab5.repository.DefaultAppContainer
+import com.example.letmecook_lab5.repository.FirebaseGroceriesRepository
 import com.example.letmecook_lab5.repository.FirebaseIngredientRepository
 import com.example.letmecook_lab5.repository.FirebaseRecipeRepository
 import com.example.letmecook_lab5.repository.FirebaseUserRepository
@@ -28,6 +29,8 @@ class LetMeCookApplication : Application() {
             (container.recipeRepository as? FirebaseRecipeRepository)?.initializeData()
             (container.userRepository as? FirebaseUserRepository)?.initializeData()
             (container.ingredientRepository as? FirebaseIngredientRepository)?.initializeData()
+            (container.groceriesRepository as? FirebaseGroceriesRepository)?.initializeData()
+
             val reviewRepository = container.reviewRepository
             try {
                 // .first() "accende" il Flow, esegue la query una volta sola e prende il primo risultato

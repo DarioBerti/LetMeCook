@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.androidx.camera.core)
     implementation(libs.androidx.camera.view)
     implementation(libs.androidx.compose.ui.text.google.fonts)
+    implementation(libs.androidx.material3)
     //implementation(libs.firebase.firestore.ktx)
     implementation(libs.googleid)
     //implementation(libs.firebase.common.ktx)

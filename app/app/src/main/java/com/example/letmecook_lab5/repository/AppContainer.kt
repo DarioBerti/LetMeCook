@@ -1,7 +1,6 @@
 package com.example.letmecook_lab5.repository
 
 import android.content.Context
-import androidx.credentials.CredentialManager
 import com.example.letmecook_lab5.auth.AuthRepository
 import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.domain.IngredientRepository
@@ -10,10 +9,7 @@ import com.example.letmecook_lab5.domain.IngredientRepository
 import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.domain.ReviewRepository
 import com.example.letmecook_lab5.domain.UserRepository
-import com.example.letmecook_lab5.repository.FirebaseNotificationRepository
 import com.example.letmecook_lab5.domain.NotificationRepository
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 
 interface AppContainer{
@@ -24,6 +20,7 @@ interface AppContainer{
     val notificationRepository : NotificationRepository
     val authRepository: AuthRepository
     val storageRepository: FirebaseStorageRepository
+    val groceriesRepository : FirebaseGroceriesRepository
 }
 
 class DefaultAppContainer(private val context: Context): AppContainer{
@@ -64,6 +61,10 @@ class DefaultAppContainer(private val context: Context): AppContainer{
 
     override val storageRepository: FirebaseStorageRepository by lazy {
         FirebaseStorageRepository()
+    }
+
+    override val groceriesRepository: FirebaseGroceriesRepository by lazy{
+        FirebaseGroceriesRepository(firestore)
     }
 
 }
