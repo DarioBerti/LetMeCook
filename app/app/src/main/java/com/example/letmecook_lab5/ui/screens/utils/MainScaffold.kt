@@ -204,7 +204,7 @@ fun MainScaffold(
             ) { data ->
                 NotificationSnackbar(
                     data = data,
-                    onClick = { navController.navigate(NotificationsRoute) }
+                    onClick = { actions.goNotifications }
                 )
             }
         },
@@ -237,7 +237,7 @@ fun MainScaffold(
                         if (conf.showNotifications && isLogged) {
                             Box {
                                 IconButton(onClick = {
-                                    navController.navigate(NotificationsRoute)
+                                    actions.goNotifications()
                                 }) {
                                     Icon(Icons.Default.Notifications, contentDescription = null)
                                 }

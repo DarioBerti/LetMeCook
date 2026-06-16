@@ -19,6 +19,8 @@ class MainActions(
         }
     }
 
+    val goNotifications = { navController.navigate(NotificationsRoute) }
+
     fun goNewRecipe(
         sourceRecipeId: String? = null,
         editRecipeId: String? = null
