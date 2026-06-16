@@ -6,10 +6,17 @@ class MainActions(
     private val navController: NavHostController
 ) {
 
-    val goHome = { navController.navigate(HomeRoute) }
+    val goHome = {
+        navController.navigate(HomeRoute) {
+            launchSingleTop = true
+            popUpTo(navController.graph.startDestinationId)
+        }
+    }
 
     val goSearch = {
-        navController.navigate(SearchRoute)
+        navController.navigate(SearchRoute) {
+            launchSingleTop = true
+        }
     }
 
     val goNewRecipe = {
@@ -21,11 +28,15 @@ class MainActions(
     }
 
     val goCommunity = {
-        navController.navigate(CommunityRoute)
+        navController.navigate(CommunityRoute) {
+            launchSingleTop = true
+        }
     }
 
     val goGroceries = {
-        navController.navigate(GroceriesRoute)
+        navController.navigate(GroceriesRoute) {
+            launchSingleTop = true
+        }
     }
 
     val goFavorites = { navController.navigate(FavoritesRoute) }

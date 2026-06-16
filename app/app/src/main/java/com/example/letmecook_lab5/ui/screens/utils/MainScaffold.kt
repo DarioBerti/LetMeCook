@@ -62,6 +62,7 @@ import com.example.letmecook_lab5.navigation.CookedRecipesRoute
 import com.example.letmecook_lab5.navigation.GroceriesRoute
 import com.example.letmecook_lab5.navigation.HomeRoute
 import com.example.letmecook_lab5.navigation.LoginRoute
+import com.example.letmecook_lab5.navigation.MainActions
 import com.example.letmecook_lab5.navigation.MainGraph
 import com.example.letmecook_lab5.navigation.NewRecipeRecapRoute
 import com.example.letmecook_lab5.navigation.NewRecipeRoute
@@ -288,7 +289,7 @@ fun MainScaffold(
         },
         bottomBar = {
             if (showBottomBar) {
-                AppBottomBar(navController)
+                AppBottomBar(actions = MainActions(navController), navController = navController)
             }
         }
     ) { padding ->

@@ -24,7 +24,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 
 @Composable
 fun AppBottomBar(
-    navController: NavHostController
+    navController: NavHostController,
+    actions: MainActions
 ) {
 
     // used to make BottomBar dynamic:
@@ -37,12 +38,7 @@ fun AppBottomBar(
 
         NavigationBarItem(
             selected = currentDestination?.hasRoute(HomeRoute::class) == true,
-            onClick = {
-                navController.navigate(HomeRoute) {
-                    launchSingleTop = true
-                    popUpTo(navController.graph.startDestinationId)
-                }
-            },
+            onClick = actions.goHome,
             icon = { Icon(Icons.Default.Home, null) },
             label = { Text("Home", style = MaterialTheme.typography.bodySmall)  },
             colors = NavigationBarItemDefaults.colors(
@@ -54,11 +50,7 @@ fun AppBottomBar(
 
         NavigationBarItem(
             selected = currentDestination?.hasRoute(SearchRoute::class) == true,
-            onClick = {
-                navController.navigate(SearchRoute) {
-                    launchSingleTop = true
-                }
-            },
+            onClick = actions.goSearch,
             icon = { Icon(Icons.Default.Search, null) },
             label = { Text("Search", style = MaterialTheme.typography.bodySmall)  },
             colors = NavigationBarItemDefaults.colors(
@@ -70,11 +62,7 @@ fun AppBottomBar(
 
         NavigationBarItem(
             selected = currentDestination?.hasRoute(CommunityRoute::class) == true,
-            onClick = {
-                navController.navigate(CommunityRoute) {
-                    launchSingleTop = true
-                }
-            },
+            onClick = actions.goCommunity,
             icon = { Icon(Icons.Default.Groups, null) },
             label = { Text("Community", style = MaterialTheme.typography.bodySmall) },
             colors = NavigationBarItemDefaults.colors(
@@ -86,11 +74,7 @@ fun AppBottomBar(
 
         NavigationBarItem(
             selected = currentDestination?.hasRoute(GroceriesRoute::class) == true,
-            onClick = {
-                navController.navigate(GroceriesRoute) {
-                    launchSingleTop = true
-                }
-            },
+            onClick = actions.goGroceries,
             icon = { Icon(Icons.Default.ShoppingCart, null) },
             label = { Text("Groceries", style = MaterialTheme.typography.bodySmall) },
             colors = NavigationBarItemDefaults.colors(

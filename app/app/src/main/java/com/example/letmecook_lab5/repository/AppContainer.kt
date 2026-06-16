@@ -25,12 +25,6 @@ interface AppContainer{
 
 class DefaultAppContainer(private val context: Context): AppContainer{
 
-    /*
-    private val credentialManager: CredentialManager by lazy {
-        CredentialManager.create(context)
-    }
-     */
-
     private val firestore: FirebaseFirestore by lazy {
         FirebaseFirestore.getInstance()
     }
