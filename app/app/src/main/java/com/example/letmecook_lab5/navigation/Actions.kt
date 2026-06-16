@@ -19,8 +19,16 @@ class MainActions(
         }
     }
 
-    val goNewRecipe = {
-        navController.navigate(NewRecipeRoute)
+    fun goNewRecipe(
+        sourceRecipeId: String? = null,
+        editRecipeId: String? = null
+    ) {
+        navController.navigate(
+            NewRecipeRoute(
+                sourceRecipeId = sourceRecipeId,
+                editRecipeId = editRecipeId
+            )
+        )
     }
 
     val goPublishedRecipes = {

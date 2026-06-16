@@ -162,8 +162,8 @@ fun NavGraphBuilder.mainGraph(
             ShowRecipeProposalDetailsRoute(
                 reviewViewModel = reviewViewModel,
                 onBack = { MainActions(navController).goBack() } ,
-                onEdit = { navController.navigate(NewRecipeRoute(editRecipeId = args.recipeId)) },
-                onCreateNew = { navController.navigate(NewRecipeRoute(sourceRecipeId = args.recipeId)) },
+                onEdit = { MainActions(navController).goNewRecipe(editRecipeId = args.recipeId) },
+                onCreateNew = { MainActions(navController).goNewRecipe(sourceRecipeId = args.recipeId) },
                 onViewAllReviewsClick = { MainActions(navController).goViewAllReviews(args.recipeId) },
                 onViewAllPhotosClick = { MainActions(navController).goViewAllPhotos(args.recipeId) },
                 isLogged = isLogged,
@@ -285,7 +285,7 @@ fun NavGraphBuilder.mainGraph(
                 onMaxCostUpdate = { viewModel.updateInputMaxCost(it) },
                 onMinCostUpdate = { viewModel.updateInputMinCost(it) },
                 onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
-                onNewRecipeClick = { navController.navigate(NewRecipeRoute()) }
+                onNewRecipeClick = { MainActions(navController).goNewRecipe() }
             )
         }
 
