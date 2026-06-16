@@ -161,7 +161,7 @@ fun NavGraphBuilder.mainGraph(
 
             ShowRecipeProposalDetailsRoute(
                 reviewViewModel = reviewViewModel,
-                onBack = { navController.popBackStack() },
+                onBack = { MainActions(navController).goBack() } ,
                 onEdit = { navController.navigate(NewRecipeRoute(editRecipeId = args.recipeId)) },
                 onCreateNew = { navController.navigate(NewRecipeRoute(sourceRecipeId = args.recipeId)) },
                 onViewAllReviewsClick = { MainActions(navController).goViewAllReviews(args.recipeId) },
@@ -197,7 +197,7 @@ fun NavGraphBuilder.mainGraph(
             val isLogged = firebaseUser?.isAnonymous == false
 
             SavedRecipesScreenRoute(
-                onBack = { navController.popBackStack() },
+                onBack = { MainActions(navController).goBack() } ,
                 onCollectionClick = { id ->
                     navController.navigate(CollectionDetailRoute(id))
                 },
@@ -216,7 +216,7 @@ fun NavGraphBuilder.mainGraph(
             val isLogged = firebaseUser?.isAnonymous == false
 
             CollectionDetailsRoute(
-                onBack = { navController.popBackStack() },
+                onBack = { MainActions(navController).goBack() } ,
                 onRecipeClick = { recipe ->
                     navController.navigate(RecipeDetailRoute(recipe.id))
                 },
@@ -261,7 +261,7 @@ fun NavGraphBuilder.mainGraph(
                     onSavedClick = { navController.navigate(SavedRecipesRoute) },
                     onCookedClick = { navController.navigate(CookedRecipesRoute) },
                     onPublishedClick = { navController.navigate(PublishedRecipesRoute) },
-                    onBack = { navController.popBackStack() },
+                    onBack = { MainActions(navController).goBack() } ,
                     onLogoutClick = { SessionManagerFacade.signOut()}
                 )
             }

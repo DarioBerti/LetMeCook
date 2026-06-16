@@ -81,7 +81,8 @@ import com.example.letmecook_lab5.viewModel.NotificationViewModel
 @Composable
 fun MainScaffold(
     navController: NavHostController,
-    content: @Composable (PaddingValues) -> Unit
+    actions: MainActions,
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = currentBackStackEntry?.destination
@@ -265,9 +266,7 @@ fun MainScaffold(
                             }
                         }
                         if (conf.showProfile && isLogged) {
-                            IconButton(onClick = {
-                                navController.navigate(ProfileRoute)
-                            }) {
+                            IconButton(onClick = actions.goProfile) {
                                 Icon(Icons.Default.Person, null)
                             }
                         }

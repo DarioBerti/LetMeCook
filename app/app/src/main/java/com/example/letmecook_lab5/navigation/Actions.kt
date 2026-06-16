@@ -39,17 +39,13 @@ class MainActions(
         }
     }
 
-    val goFavorites = { navController.navigate(FavoritesRoute) }
-
     val goProfile = { navController.navigate(ProfileRoute) }
-
-    val goReviewHistory = { navController.navigate(ReviewHistoryRoute) }
 
     val openRecipe: (String) -> Unit = { id ->
         navController.navigate(RecipeDetailRoute(id))
     }
 
-    val back = { navController.popBackStack() }
+    val goBack = { navController.popBackStack() }
 
     val goViewAllReviews: (String) -> Unit = { recipeId ->
         navController.navigate(RecipeReviewsRoute(recipeId))

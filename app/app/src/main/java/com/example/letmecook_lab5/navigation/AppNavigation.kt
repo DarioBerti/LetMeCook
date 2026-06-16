@@ -28,7 +28,7 @@ fun AppNavigation(navController: NavHostController) {
         }
     }
 
-    MainScaffold(navController) { padding ->
+    MainScaffold(navController, actions = MainActions(navController)) { padding ->
 
         NavHost(
             navController = navController,
