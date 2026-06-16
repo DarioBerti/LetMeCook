@@ -133,10 +133,12 @@ fun NavGraphBuilder.mainGraph(
                     val relatedId = notification.relatedId
                     Log.d("Notification", notification.toString())
                     Log.d("RelatedIId", relatedId ?: "")
-                    when(notification.type) {
-                        NotificationType.REVIEW_RECEIVED    -> navController.navigate(RecipeDetailRoute(relatedId ?: ""))
-                        NotificationType.RECIPE_DUPLICATED  -> navController.navigate(RecipeDetailRoute(relatedId ?: ""))
-                        NotificationType.RECOMMENDATION     -> navController.navigate(RecipeDetailRoute(relatedId ?: ""))
+                    when (notification.type) {
+                        NotificationType.REVIEW_RECEIVED,
+                        NotificationType.RECIPE_DUPLICATED,
+                        NotificationType.RECOMMENDATION ->
+                            MainActions(navController).openRecipe(relatedId ?: "")
+
                         NotificationType.TEST -> Unit
                     }
                 }
@@ -199,10 +201,10 @@ fun NavGraphBuilder.mainGraph(
             SavedRecipesScreenRoute(
                 onBack = { MainActions(navController).goBack() } ,
                 onCollectionClick = { id ->
-                    navController.navigate(CollectionDetailRoute(id))
+                    MainActions(navController).goCollectionDetail(id)
                 },
                 onRecipeClick = { recipe ->
-                    navController.navigate(RecipeDetailRoute(recipe.id))
+                    MainActions(navController).openRecipe(recipe.id)
                 },
                 isLogged = isLogged
             )
@@ -218,7 +220,7 @@ fun NavGraphBuilder.mainGraph(
             CollectionDetailsRoute(
                 onBack = { MainActions(navController).goBack() } ,
                 onRecipeClick = { recipe ->
-                    navController.navigate(RecipeDetailRoute(recipe.id))
+                    MainActions(navController).openRecipe(recipe.id)
                 },
                 isLogged = isLogged
             )
@@ -258,9 +260,9 @@ fun NavGraphBuilder.mainGraph(
                     onRemoveCuisine = viewModel::removeTypeOfCuisine,
                     onAddIngredient = viewModel::addFavoriteIngredient,
                     onRemoveIngredient = viewModel::removeFavoriteIngredient,
-                    onSavedClick = { navController.navigate(SavedRecipesRoute) },
-                    onCookedClick = { navController.navigate(CookedRecipesRoute) },
-                    onPublishedClick = { navController.navigate(PublishedRecipesRoute) },
+                    onSavedClick = { MainActions(navController).goSaved() },
+                    onCookedClick = { MainActions(navController).goCooked() },
+                    onPublishedClick = { MainActions(navController).goPublished() },
                     onBack = { MainActions(navController).goBack() } ,
                     onLogoutClick = { SessionManagerFacade.signOut()}
                 )

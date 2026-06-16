@@ -51,7 +51,7 @@ fun NavGraphBuilder.newRecipeGraph(
                 onDecreaseServings = viewModel::decreaseServings,
                 onAddStep = viewModel::addStep,
                 onNextStep = viewModel::nextStep,
-                onSave = { navController.navigate(NewRecipeRecapRoute) },
+                onSave = { MainActions(navController).goNewRecipeRecap() },
                 onClearError = viewModel::clearError,
                 onStepTitleChanged = viewModel::stepTitleChanged,
                 onStepDescriptionChanged = viewModel::stepDescriptionChanged,
@@ -81,7 +81,7 @@ fun NavGraphBuilder.newRecipeGraph(
                 onPublish = {
                     if (uiState.editingRecipeId != null) viewModel.updateRecipe()
                     else viewModel.saveRecipe()
-                    navController.navigate(PublishedRecipesRoute)
+                    MainActions(navController).goPublishedRecipes()
                 },
                 onKeepEditing = {
                     viewModel.keepEditing()

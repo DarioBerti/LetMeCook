@@ -33,6 +33,12 @@ class MainActions(
         )
     }
 
+    val goNewRecipeRecap = { navController.navigate(NewRecipeRecapRoute) }
+
+    val goCollectionDetail: (String) -> Unit = { id ->
+        navController.navigate(CollectionDetailRoute(id))
+    }
+
     val goPublishedRecipes = {
         navController.navigate(PublishedRecipesRoute)
     }
@@ -64,5 +70,8 @@ class MainActions(
     val goViewAllPhotos: (String) -> Unit = { recipeId ->
         navController.navigate(RecipePhotosRoute(recipeId))
     }
+    val goSaved =  { navController.navigate(SavedRecipesRoute) }
+    val goCooked = { navController.navigate(CookedRecipesRoute) }
+    val goPublished = { navController.navigate(PublishedRecipesRoute) }
 
 }
