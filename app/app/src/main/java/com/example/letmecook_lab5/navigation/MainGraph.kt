@@ -224,38 +224,6 @@ fun NavGraphBuilder.mainGraph(
             )
         }
 
-        /*
-        composable<ProfileRoute> {
-            val viewModel: ProfileViewModel = viewModel(
-                factory = ProfileViewModel.Factory
-            )
-            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-            ProfileScreen(
-                uiState = uiState,
-                onEditClick = viewModel::startEditing,
-                onDoneClick = viewModel::save,
-                onCancelEdit = viewModel::cancelEditing,
-                onNameChange = viewModel::setName,
-                onNicknameChange = viewModel::setNickname,
-                onEmailChange = viewModel::setEmail,
-                onOpenCamera = viewModel::openCamera,
-                onTakePhoto = viewModel::onImageCaptured,
-                onRemovePhoto = viewModel::removePhoto,
-                onAddDietary = viewModel::addDietaryPreference,
-                onRemoveDietary = viewModel::removeDietaryPreference,
-                onAddCuisine = viewModel::addTypeOfCuisine,
-                onRemoveCuisine = viewModel::removeTypeOfCuisine,
-                onAddIngredient = viewModel::addFavoriteIngredient,
-                onRemoveIngredient = viewModel::removeFavoriteIngredient,
-                onSavedClick = { navController.navigate(SavedRecipesRoute) },
-                onCookedClick = { navController.navigate(CookedRecipesRoute) },
-                onPublishedClick = { navController.navigate(PublishedRecipesRoute) },
-                onBack = { navController.popBackStack() }
-            )
-        }
-         */
-
         composable<ProfileRoute> {
 
             val firebaseUser by SessionManagerFacade
@@ -326,24 +294,5 @@ fun NavGraphBuilder.mainGraph(
             CookedRecipesScreen()
         }
 
-        /*
-        dialog<LoginToProceedDialogRoute> {
-            LoginToProceedDialogRoute(
-                onDismiss = {navController.popBackStack()},
-                onLoginSuccess = {navController.popBackStack()}
-            )
-        }
-
-         */
-
-/*
-        composable<FavoritesRoute> {
-            FavoritesScreen(actions = MainActions(navController))
-        }
-
-        composable<ReviewHistoryRoute> {
-            ReviewHistoryScreen(actions = MainActions(navController))
-        }
- */
     }
 }

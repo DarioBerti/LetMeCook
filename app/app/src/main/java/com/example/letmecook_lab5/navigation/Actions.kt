@@ -48,8 +48,4 @@ class MainActions(
         navController.navigate(RecipePhotosRoute(recipeId))
     }
 
-    /*fun showLoginDialog() {
-        navController.navigate(LoginToProceedDialogRoute)
-    }
-     */
 }
