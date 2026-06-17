@@ -204,7 +204,7 @@ fun MainScaffold(
             ) { data ->
                 NotificationSnackbar(
                     data = data,
-                    onClick = { actions.goNotifications }
+                    onClick = { actions.goNotifications() }
                 )
             }
         },

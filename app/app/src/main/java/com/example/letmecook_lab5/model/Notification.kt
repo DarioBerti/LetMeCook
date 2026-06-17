@@ -17,5 +17,6 @@ enum class NotificationType {
     TEST,
     RECIPE_DUPLICATED,
     REVIEW_RECEIVED,
-    RECOMMENDATION
+    RECOMMENDATION,
+    FOLLOW_RECEIVED
 }

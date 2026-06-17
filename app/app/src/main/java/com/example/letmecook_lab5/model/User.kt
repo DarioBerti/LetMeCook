@@ -12,8 +12,8 @@ data class User(
 
     val followers: Int = 0,
     val following: Int = 0,
-    val followersId: List<String> = emptyList(),
-    val followingId: List<String> = emptyList(),
+    val followerIds: List<String> = emptyList(),
+    val followingIds: List<String> = emptyList(),
 
     val dietaryPreferences: List<String> = emptyList(),
     val typesOfCuisine: List<String> = emptyList(),

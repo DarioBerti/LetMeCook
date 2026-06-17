@@ -460,12 +460,12 @@ fun ProfileInfo(
         ) {
             StatBox(
                 "FOLLOWERS",
-                user.followersId.size.toString(),
+                user.followerIds.size.toString(),
                 modifier = Modifier.weight(1f)
             )
             StatBox(
                 "FOLLOWING",
-                user.followingId.size.toString(),
+                user.followingIds.size.toString(),
                 modifier = Modifier.weight(1f)
             )
         }

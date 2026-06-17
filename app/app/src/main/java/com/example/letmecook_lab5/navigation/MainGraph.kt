@@ -138,7 +138,8 @@ fun NavGraphBuilder.mainGraph(
                         NotificationType.RECIPE_DUPLICATED,
                         NotificationType.RECOMMENDATION ->
                             MainActions(navController).openRecipe(relatedId ?: "")
-
+                        NotificationType.FOLLOW_RECEIVED ->
+                            MainActions(navController).goProfile(relatedId ?: "")
                         NotificationType.TEST -> Unit
                     }
                 }

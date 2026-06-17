@@ -193,7 +193,7 @@ class FirebaseUserRepository(
             .get()
             .await()
             .toObject(User::class.java)
-        return follower?.followingId?.contains(followedId) == true
+        return follower?.followingIds?.contains(followedId) == true
     }
 
     override fun getFollowers(userId: String): Flow<List<User>> =
@@ -201,7 +201,7 @@ class FirebaseUserRepository(
             .snapshots()
             .flatMapLatest { snapshot ->
                 val user = snapshot.toObject(User::class.java)
-                val followerIds = user?.followersId ?: emptyList()
+                val followerIds = user?.followerIds ?: emptyList()
 
                 if (followerIds.isEmpty()) {
                     flowOf(emptyList())
@@ -221,7 +221,7 @@ class FirebaseUserRepository(
             .snapshots()
             .flatMapLatest { snapshot ->
                 val user = snapshot.toObject(User::class.java)
-                val followingIds = user?.followingId ?: emptyList()
+                val followingIds = user?.followingIds ?: emptyList()
 
                 if (followingIds.isEmpty()) {
                     flowOf(emptyList())

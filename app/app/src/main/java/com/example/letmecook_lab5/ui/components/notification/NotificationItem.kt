@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.CheckCircleOutline
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.StarOutline
@@ -198,6 +199,7 @@ private fun NotificationIcon(
         NotificationType.REVIEW_RECEIVED    -> Icons.Default.Star
         NotificationType.RECIPE_DUPLICATED  -> Icons.Default.Lightbulb
         NotificationType.RECOMMENDATION     -> Icons.Default.Restaurant
+        NotificationType.FOLLOW_RECEIVED    -> Icons.Default.PersonAdd
     }
 
     val color = when(type) {
@@ -205,6 +207,7 @@ private fun NotificationIcon(
         NotificationType.REVIEW_RECEIVED    -> Color.Yellow
         NotificationType.RECIPE_DUPLICATED  -> Color.Blue
         NotificationType.RECOMMENDATION     -> Color.Green
+        NotificationType.FOLLOW_RECEIVED    -> Color.Magenta
     }
 
     Box(

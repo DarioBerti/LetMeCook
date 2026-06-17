@@ -16,12 +16,16 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.letmecook_lab5.LetMeCookApplication
 import com.example.letmecook_lab5.auth.SessionManagerFacade
+import com.example.letmecook_lab5.domain.NotificationRepository
+import com.example.letmecook_lab5.model.Notification
+import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.repository.FirebaseStorageRepository
 import com.example.letmecook_lab5.session.SessionManager
 
 class ProfileViewModel(
     private val userRepository: UserRepository,
     private val storageRepo: FirebaseStorageRepository,
+    private val notificationRepository: NotificationRepository,
     private val userId: String
 ) : ViewModel() {
 
@@ -83,6 +87,19 @@ class ProfileViewModel(
                     followerId = currentUid,
                     followedId = userId
                 )
+
+                val name = SessionManagerFacade.currentUser.value?.displayName ?: ""
+
+                notificationRepository.sendNotification(
+                    Notification(
+                        userId = userId,
+                        title = "New follower",
+                        message = "$name started following you",
+                        type = NotificationType.FOLLOW_RECEIVED,
+                        relatedId = currentUid
+                    )
+                )
+
                 _uiState.update {
                     it.copy(isFollowing = true)
                 }
@@ -171,10 +188,12 @@ class ProfileViewModel(
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val userRepository = application.container.userRepository
                 val storageRepository = application.container.storageRepository
+                val notificationRepository = application.container.notificationRepository
 
                 ProfileViewModel(
                     userRepository = userRepository,
                     storageRepo = storageRepository,
+                    notificationRepository = notificationRepository,
                     userId = userId
                 )
             }
