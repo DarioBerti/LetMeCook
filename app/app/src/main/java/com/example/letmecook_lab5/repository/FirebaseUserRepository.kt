@@ -14,6 +14,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
 
 class FirebaseUserRepository(
     private val firestore : FirebaseFirestore
@@ -183,13 +187,45 @@ class FirebaseUserRepository(
         }.await()
     }
 
-    override fun getFollowers(userId: String): Flow<List<String>> {
-        TODO("Not yet implemented")
-    }
+    override fun getFollowers(userId: String): Flow<List<User>> =
+        userCollection.document(userId)
+            .snapshots()
+            .flatMapLatest { snapshot ->
+                val user = snapshot.toObject(User::class.java)
+                val followerIds = user?.followersId ?: emptyList()
 
-    override fun getFollowing(userId: String): Flow<List<String>> {
-        TODO("Not yet implemented")
-    }
+                if (followerIds.isEmpty()) {
+                    flowOf(emptyList())
+                } else {
+                    combine(
+                        followerIds.map { id ->
+                            getUserById(id).filterNotNull()
+                        }
+                    ) { users ->
+                        users.toList()
+                    }
+                }
+            }
+
+    override fun getFollowing(userId: String): Flow<List<User>> =
+        userCollection.document(userId)
+            .snapshots()
+            .flatMapLatest { snapshot ->
+                val user = snapshot.toObject(User::class.java)
+                val followingIds = user?.followingId ?: emptyList()
+
+                if (followingIds.isEmpty()) {
+                    flowOf(emptyList())
+                } else {
+                    combine(
+                        followingIds.map { id ->
+                            getUserById(id).filterNotNull()
+                        }
+                    ) { users ->
+                        users.toList()
+                    }
+                }
+            }
 
     suspend fun ensureUserProfile(firebaseUser: FirebaseUser) {
 

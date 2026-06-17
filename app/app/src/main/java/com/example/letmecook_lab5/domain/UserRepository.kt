@@ -18,6 +18,6 @@ interface UserRepository {
     suspend fun deleteCollection(userId: String, collectionId: String)
     suspend fun followUser(followerId: String, followedId: String)
     suspend fun unfollowUser(followerId: String, followedId: String)
-    fun getFollowers(userId: String): Flow<List<String>>
-    fun getFollowing(userId: String): Flow<List<String>>
+    fun getFollowers(userId: String): Flow<List<User>>
+    fun getFollowing(userId: String): Flow<List<User>>
 }
