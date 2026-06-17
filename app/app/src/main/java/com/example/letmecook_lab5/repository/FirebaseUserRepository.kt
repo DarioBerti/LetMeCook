@@ -187,6 +187,15 @@ class FirebaseUserRepository(
         }.await()
     }
 
+    override suspend fun isFollowing(followerId: String, followedId: String): Boolean {
+        val follower = userCollection
+            .document(followerId)
+            .get()
+            .await()
+            .toObject(User::class.java)
+        return follower?.followingId?.contains(followedId) == true
+    }
+
     override fun getFollowers(userId: String): Flow<List<User>> =
         userCollection.document(userId)
             .snapshots()

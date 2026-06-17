@@ -33,12 +33,12 @@ import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Person
 import com.example.letmecook_lab5.model.User
-import com.example.letmecook_lab5.session.SessionManager
 import com.example.letmecook_lab5.viewModel.ProfileViewModel.ProfileUiState
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.collectAsState
 import com.example.letmecook_lab5.auth.SessionManagerFacade
+import com.example.letmecook_lab5.ui.components.profile.FollowButton
 
 
 // Layout per modalità verticale
@@ -51,7 +51,9 @@ fun PortraitLayout(
     onCookedClick: () -> Unit,
     onSavedClick: () -> Unit,
     onEditClick: (() -> Unit)? = null,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    isFollowing: Boolean,
+    onFollowClick: () -> Unit
 )
 {
     LazyColumn(
@@ -81,7 +83,9 @@ fun PortraitLayout(
                     onSavedClick = onSavedClick,
                     onCookedClick = onCookedClick,
                     onPublishedClick = onPublishedClick,
-                    onLogoutClick = onLogoutClick
+                    onLogoutClick = onLogoutClick,
+                    isFollowing = isFollowing,
+                    onFollowClick = onFollowClick
                 )
             }
         }
@@ -98,7 +102,9 @@ fun LandscapeLayout(
     onCookedClick: () -> Unit,
     onSavedClick: () -> Unit,
     onEditClick: (() -> Unit)? = null,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    isFollowing: Boolean,
+    onFollowClick: () -> Unit
 )
 {
     Row(
@@ -131,7 +137,9 @@ fun LandscapeLayout(
                     onSavedClick = onSavedClick,
                     onCookedClick = onCookedClick,
                     onPublishedClick = onPublishedClick,
-                    onLogoutClick = onLogoutClick
+                    onLogoutClick = onLogoutClick,
+                    isFollowing = isFollowing,
+                    onFollowClick = onFollowClick
                 ) }
             }
         }
@@ -159,7 +167,8 @@ fun ProfileScreen(
     onCookedClick: () -> Unit,
     onSavedClick: () -> Unit,
     onBack: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    onFollowClick: () -> Unit
 ) {
     val displayUser = uiState.draft ?: uiState.user ?: return
     val currentUid = SessionManagerFacade.currentUser.collectAsState().value?.uid
@@ -216,7 +225,9 @@ fun ProfileScreen(
                     onSavedClick = onSavedClick,
                     onCookedClick = onCookedClick,
                     onPublishedClick = onPublishedClick,
-                    onLogoutClick = onLogoutClick
+                    onLogoutClick = onLogoutClick,
+                    isFollowing = uiState.isFollowing,
+                    onFollowClick = onFollowClick
                 )
             } else {
                 PortraitLayout(
@@ -227,7 +238,9 @@ fun ProfileScreen(
                     onSavedClick = onSavedClick,
                     onCookedClick = onCookedClick,
                     onPublishedClick = onPublishedClick,
-                    onLogoutClick = onLogoutClick
+                    onLogoutClick = onLogoutClick,
+                    isFollowing = uiState.isFollowing,
+                    onFollowClick = onFollowClick
                 )
             }
         }
@@ -390,8 +403,12 @@ fun ProfileInfo(
     onSavedClick: () -> Unit,
     onCookedClick: () -> Unit,
     onPublishedClick: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    isFollowing: Boolean,
+    onFollowClick: () -> Unit
 ) {
+    val currentUid = SessionManagerFacade.currentUser.collectAsState().value?.uid
+
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -429,6 +446,12 @@ fun ProfileInfo(
                 Text("Logout")
             }
         }
+        if (!isOwner && currentUid != null) {
+            FollowButton(
+                isFollowing = isFollowing,
+                onClick = onFollowClick
+            )
+        }
         // Followers + Following
         Row(
             modifier = Modifier.fillMaxWidth()
@@ -437,12 +460,12 @@ fun ProfileInfo(
         ) {
             StatBox(
                 "FOLLOWERS",
-                user.followers.toString(),
+                user.followersId.size.toString(),
                 modifier = Modifier.weight(1f)
             )
             StatBox(
                 "FOLLOWING",
-                user.following.toString(),
+                user.followingId.size.toString(),
                 modifier = Modifier.weight(1f)
             )
         }

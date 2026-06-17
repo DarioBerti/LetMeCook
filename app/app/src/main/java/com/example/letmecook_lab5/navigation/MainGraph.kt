@@ -259,7 +259,8 @@ fun NavGraphBuilder.mainGraph(
                 onCookedClick = { MainActions(navController).goCooked() },
                 onPublishedClick = { MainActions(navController).goPublished() },
                 onBack = { MainActions(navController).goBack() } ,
-                onLogoutClick = { SessionManagerFacade.signOut()}
+                onLogoutClick = { SessionManagerFacade.signOut()},
+                onFollowClick = viewModel::toggleFollow
             )
 
             /*val firebaseUser by SessionManagerFacade

@@ -38,7 +38,8 @@ class ProfileViewModel(
         val validation: FormValidation = FormValidation(),
         val isLoading: Boolean = true,
         val isEditing: Boolean = false,
-        val isCameraOpen: Boolean = false
+        val isCameraOpen: Boolean = false,
+        val isFollowing: Boolean = false
     )
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -47,11 +48,48 @@ class ProfileViewModel(
     init {
         viewModelScope.launch {
             userRepository.getUserById(userId).collect { user ->
-                _uiState.update { it.copy(user = user, isLoading = false) }
+
+                val currentUid = SessionManagerFacade.currentUser.value?.uid
+
+                val following = if (currentUid != null && currentUid != userId) {
+                    userRepository.isFollowing(
+                        followerId = currentUid,
+                        followedId = userId
+                    )
+                } else {
+                    false
+                }
+
+                _uiState.update { it.copy(user = user, isLoading = false, isFollowing = following) }
                 Log.d("PROFILE_VM", "user emitted = $user")
             }
         }
     }
+
+    fun toggleFollow() {
+        val currentUid = SessionManagerFacade.currentUser.value?.uid ?: return
+
+        viewModelScope.launch {
+            if (_uiState.value.isFollowing) {
+                userRepository.unfollowUser(
+                    followerId = currentUid,
+                    followedId = userId
+                )
+                _uiState.update {
+                    it.copy(isFollowing = false)
+                }
+            } else {
+                userRepository.followUser(
+                    followerId = currentUid,
+                    followedId = userId
+                )
+                _uiState.update {
+                    it.copy(isFollowing = true)
+                }
+            }
+        }
+    }
+
 
     fun startEditing() {
         _uiState.update {
