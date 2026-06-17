@@ -27,6 +27,10 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.createSavedStateHandle
 import kotlinx.coroutines.flow.first
 import com.example.letmecook_lab5.auth.SessionManagerFacade
+import com.example.letmecook_lab5.model.Ingredient
+import com.example.letmecook_lab5.domain.GroceriesRepository
+import com.example.letmecook_lab5.model.CartRecipe
+import com.example.letmecook_lab5.model.CartIngredient
 
 data class ShowRecipeDetailsUiState(
     val recipe: Recipe? = null,
@@ -39,7 +43,8 @@ data class ShowRecipeDetailsUiState(
 class ShowRecipeDetailsViewModel(
     savedStateHandle : SavedStateHandle,
     private val userRepo: UserRepository,
-    private val repo: RecipeRepository
+    private val repo: RecipeRepository,
+    private val groceriesRepo: GroceriesRepository
 ) : ViewModel() {
 
     private val recipeDetailsRoute = savedStateHandle.toRoute<RecipeDetailRoute>()
@@ -77,6 +82,32 @@ class ShowRecipeDetailsViewModel(
             userRepo.saveRecipeToCollections(SessionManagerFacade.currentUser.value?.uid.orEmpty(), recipeId, collectionIds)
         }
     }
+    fun addToGroceryList(items: List<Ingredient>, servings: Int) {
+        val recipe = _uiState.value.recipe ?: return
+        if (items.isEmpty()) return
+
+        val cartRecipe = CartRecipe(
+            recipeId    = recipe.id,
+            recipeTitle = recipe.title,
+            recipeImage = recipe.imageUrl,
+            servings    = servings,
+            ingredients = items.map { ing ->
+                CartIngredient(
+                    name      = ing.name,
+                    quantity  = ing.quantity,
+                    unit      = ing.unit,
+                    isChecked = false
+                )
+            }
+        )
+
+        viewModelScope.launch {
+            groceriesRepo.addToCart(
+                SessionManagerFacade.currentUser.value?.uid.orEmpty(),
+                cartRecipe
+            )
+        }
+    }
 
     companion object {
         val Factory : ViewModelProvider.Factory = viewModelFactory {
@@ -84,11 +115,13 @@ class ShowRecipeDetailsViewModel(
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
                 val userRepository = application.container.userRepository
+                val groceriesRepository = application.container.groceriesRepository
                 val savedStateHandle = createSavedStateHandle()
                 ShowRecipeDetailsViewModel(
                     savedStateHandle = savedStateHandle,
                     userRepo = userRepository,
-                    repo = recipeRepository
+                    repo = recipeRepository,
+                    groceriesRepo = groceriesRepository
                 )
             }
         }

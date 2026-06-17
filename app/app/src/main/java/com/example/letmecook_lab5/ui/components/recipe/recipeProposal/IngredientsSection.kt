@@ -29,15 +29,28 @@ import androidx.compose.ui.unit.sp
 import com.example.letmecook_lab5.model.Ingredient
 import com.example.letmecook_lab5.ui.screens.recipeList.IngredientRow
 import kotlin.collections.forEach
+import androidx.compose.foundation.clickable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 
 @Composable
 fun IngredientsSection(
     ingredients: List<Ingredient>,
     baseServings: Int,
-    isLogged: Boolean
+    isLogged: Boolean,
+    onAddToCart: (List<Ingredient>, Int) -> Unit
 ) {
     val primary = MaterialTheme.colorScheme.primary
+
+    val base = baseServings.coerceAtLeast(1)
+    var servings by remember { mutableStateOf(base) }
+    var selectedIds by remember { mutableStateOf(setOf<String>()) }
+
+    val factor = servings.toDouble() / base
+    val scaled = ingredients.map { it.copy(quantity = it.quantity * factor) }
 
     Column(
         modifier = Modifier
@@ -67,17 +80,17 @@ fun IngredientsSection(
                     .padding(start = 8.dp)
             )
             if (isLogged) Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = {}, modifier = Modifier.size(24.dp)) {
+                IconButton(onClick = { if (servings > 1) servings-- }, modifier = Modifier.size(24.dp)) {
                     Icon(imageVector = Icons.Default.Remove, tint = primary, modifier = Modifier.size(14.dp), contentDescription = "-")
                 }
                 Text(
-                    text       = "$baseServings Servings",
+                    text       = "$servings Servings",
                     fontWeight = FontWeight.Bold,
                     color      = MaterialTheme.colorScheme.onBackground,
                     fontSize   = 16.sp,
                     modifier   = Modifier.padding(horizontal = 4.dp)
                 )
-                IconButton(onClick = {}, modifier = Modifier.size(24.dp)) {
+                IconButton(onClick = { servings++ }, modifier = Modifier.size(24.dp)) {
                     Icon(imageVector = Icons.Default.Add, tint = primary, modifier = Modifier.size(14.dp), contentDescription = "+")
                 }
             }
@@ -86,12 +99,28 @@ fun IngredientsSection(
                 imageVector        = Icons.Default.ShoppingCart,
                 contentDescription = "Add to cart",
                 tint               = primary,
-                modifier           = Modifier.size(25.dp)
+                modifier           = Modifier
+                    .size(25.dp)
+                    .clickable {
+                        val toAdd = scaled.filter { it.id in selectedIds }
+                        if (toAdd.isNotEmpty()) {
+                            onAddToCart(toAdd, servings)
+                        }
+                    }
             )
         }
 
-        ingredients.forEach { ingredient ->
-            IngredientRow(ingredient = ingredient)
+        scaled.forEach { ingredient ->
+            IngredientRow(
+                ingredient = ingredient,
+                selected   = ingredient.id in selectedIds,
+                onToggle   = {
+                    selectedIds = if (ingredient.id in selectedIds)
+                        selectedIds - ingredient.id
+                    else
+                        selectedIds + ingredient.id
+                }
+            )
         }
         Spacer(Modifier.height(8.dp))
     }

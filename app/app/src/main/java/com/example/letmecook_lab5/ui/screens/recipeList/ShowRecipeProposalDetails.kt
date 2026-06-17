@@ -92,6 +92,9 @@ import com.example.letmecook_lab5.ui.components.recipe.recipeProposal.AuthorRow
 import com.example.letmecook_lab5.ui.components.recipe.recipeProposal.ImageSection
 import com.example.letmecook_lab5.ui.components.recipe.recipeProposal.IngredientsSection
 import com.example.letmecook_lab5.ui.screens.utils.RecipeOptions
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material3.ElevatedCard
+import kotlinx.coroutines.delay
 
 @Composable
 fun ShowRecipeProposalDetailsRoute(
@@ -136,7 +139,8 @@ fun ShowRecipeProposalDetailsRoute(
             isLogged = isLogged,
             currentUserId = currentUserId,
             ownerName = uiState.ownerName,
-            ownerAvatar = uiState.ownerAvatar
+            ownerAvatar = uiState.ownerAvatar,
+            onAddToGroceryList = viewModel::addToGroceryList
         )
     }
 }
@@ -160,7 +164,8 @@ fun ShowRecipeProposalDetails(
     isLogged: Boolean,
     currentUserId: String?,
     ownerName: String,
-    ownerAvatar: String?
+    ownerAvatar: String?,
+    onAddToGroceryList: (List<Ingredient>, Int) -> Unit
 ) {
     Log.d("Recipe", recipe.toString())
     val onBackground = MaterialTheme.colorScheme.onBackground
@@ -168,6 +173,7 @@ fun ShowRecipeProposalDetails(
     var showSaveDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     var showReviewSheet by remember { mutableStateOf(false) }
+    var showCartConfirmation by remember { mutableStateOf(false) }
     val isSaved = collections.any { recipe.id in it.recipeIds }
     val isOwner = currentUserId != null && recipe.ownerId == currentUserId
     val hasReviewed = currentUserId != null && reviews.any { it.authorId == currentUserId }
@@ -219,7 +225,7 @@ fun ShowRecipeProposalDetails(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -255,7 +261,11 @@ fun ShowRecipeProposalDetails(
                 IngredientsSection(
                     ingredients  = recipe.ingredients,
                     baseServings = recipe.servings,
-                    isLogged     = isLogged
+                    isLogged     = isLogged,
+                    onAddToCart  = { items, servings ->
+                        onAddToGroceryList(items, servings)
+                        showCartConfirmation = true
+                    }
                 )
             }
             item { Spacer(Modifier.height(12.dp)) }
@@ -275,7 +285,12 @@ fun ShowRecipeProposalDetails(
                     onDeleteReview = onDeleteReview,
                     onUpdateReview = onUpdateReview
                 ) }
-
+        }
+        if (showCartConfirmation) {
+            CartAddedPopup(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                onDismiss = { showCartConfirmation = false }
+            )
         }
     }
 
@@ -358,6 +373,50 @@ fun ShowRecipeProposalDetails(
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun CartAddedPopup(
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LaunchedEffect(Unit) {
+        delay(2500)
+        onDismiss()
+    }
+
+    ElevatedCard(
+        modifier = modifier
+            .padding(12.dp)
+            .fillMaxWidth(),
+        onClick = onDismiss
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = "Added to groceries",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Your ingredients were added to your groceries list",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    color = Color.DarkGray
+                )
+            }
+        }
     }
 }
 
@@ -531,7 +590,12 @@ private fun CreateNewButton(onClick: () -> Unit) {
 
 
 @Composable
-fun IngredientRow(ingredient: Ingredient, modifier: Modifier = Modifier) {
+fun IngredientRow(
+    ingredient: Ingredient,
+    selected: Boolean = false,
+    onToggle: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     val qtyStr = if (ingredient.quantity % 1 == 0.0)
         ingredient.quantity.toInt().toString()
     else "%.1f".format(ingredient.quantity)
@@ -541,13 +605,14 @@ fun IngredientRow(ingredient: Ingredient, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onToggle() }
             .padding(top = 14.dp, start = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector        = Icons.Default.CheckBoxOutlineBlank,
+            imageVector        = if (selected) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.outline,
+            tint               = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
             modifier           = Modifier.size(18.dp)
         )
         Spacer(Modifier.width(12.dp))
