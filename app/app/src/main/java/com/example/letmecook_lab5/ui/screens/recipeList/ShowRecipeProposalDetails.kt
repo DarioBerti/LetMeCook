@@ -105,7 +105,8 @@ fun ShowRecipeProposalDetailsRoute(
         factory = ShowRecipeDetailsViewModel.Factory
     ),
     isLogged: Boolean,
-    currentUserId: String?
+    currentUserId: String?,
+    onAuthorClick: (String) -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val recipe = uiState.recipe
@@ -136,7 +137,8 @@ fun ShowRecipeProposalDetailsRoute(
             isLogged = isLogged,
             currentUserId = currentUserId,
             ownerName = uiState.ownerName,
-            ownerAvatar = uiState.ownerAvatar
+            ownerAvatar = uiState.ownerAvatar,
+            onAuthorClick = onAuthorClick
         )
     }
 }
@@ -160,7 +162,8 @@ fun ShowRecipeProposalDetails(
     isLogged: Boolean,
     currentUserId: String?,
     ownerName: String,
-    ownerAvatar: String?
+    ownerAvatar: String?,
+    onAuthorClick: (String) -> Unit
 ) {
     Log.d("Recipe", recipe.toString())
     val onBackground = MaterialTheme.colorScheme.onBackground
@@ -236,7 +239,11 @@ fun ShowRecipeProposalDetails(
                 )
             }
             if (isLogged) item {
-                AuthorRow(authorName = ownerName, avatarUrl = ownerAvatar)
+                AuthorRow(
+                    authorId = recipe.ownerId,
+                    authorName = ownerName,
+                    avatarUrl = ownerAvatar,
+                    onAuthorClick = onAuthorClick)
             }
             item {
                 Text(

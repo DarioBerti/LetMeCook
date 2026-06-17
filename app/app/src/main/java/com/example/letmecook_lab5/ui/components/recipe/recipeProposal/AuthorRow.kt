@@ -2,6 +2,7 @@ package com.example.letmecook_lab5.ui.components.recipe.recipeProposal
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,8 +30,10 @@ import com.example.letmecook_lab5.session.SessionManager
 
 @Composable
 fun AuthorRow(
+    authorId: String,
     authorName: String,
-    avatarUrl: String?
+    avatarUrl: String?,
+    onAuthorClick: (String) -> Unit
 ) {
     val primary = MaterialTheme.colorScheme.primary
     val onBackground = MaterialTheme.colorScheme.onBackground
@@ -41,33 +44,40 @@ fun AuthorRow(
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (avatarUrl != null) {
-            AsyncImage(
-                model = avatarUrl,
-                contentDescription = "Author avatar",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(25.dp)
-                    .clip(CircleShape)
-            )
-        } else {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = "Author avatar",
-                tint = MaterialTheme.colorScheme.scrim,
-                modifier = Modifier.size(25.dp)
+        Row(
+            modifier = Modifier
+                .clickable {
+                    onAuthorClick(authorId)
+                },
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (avatarUrl != null) {
+                AsyncImage(
+                    model = avatarUrl,
+                    contentDescription = "Author avatar",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(25.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = "Author avatar",
+                    tint = MaterialTheme.colorScheme.scrim,
+                    modifier = Modifier.size(25.dp)
+                )
+            }
+            Text(
+                text = "@$authorName",
+                fontSize   = 14.sp,
+                style      = MaterialTheme.typography.labelLarge,
+                color      = primary,
+                fontWeight = FontWeight.Bold,
+                modifier   = Modifier.padding(start = 10.dp)
             )
         }
-        Text(
-            text = "@$authorName",
-            fontSize   = 14.sp,
-            style      = MaterialTheme.typography.labelLarge,
-            color      = primary,
-            fontWeight = FontWeight.Bold,
-            modifier   = Modifier
-                .weight(1f)
-                .padding(start = 10.dp)
-        )
+        /*
         Box(
             modifier = Modifier
                 .height(25.dp)
@@ -76,6 +86,6 @@ fun AuthorRow(
             contentAlignment = Alignment.Center
         ) {
             Text(text = "Follow", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
-        }
+        }*/
     }
 }

@@ -421,11 +421,13 @@ fun ProfileInfo(
                 color       = MaterialTheme.colorScheme.primary
             )
         }
-        Button(
-            onClick = onLogoutClick,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("Logout")
+        if (isOwner) {
+            Button(
+                onClick = onLogoutClick,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Text("Logout")
+            }
         }
         // Followers + Following
         Row(

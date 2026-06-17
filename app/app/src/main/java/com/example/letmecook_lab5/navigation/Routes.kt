@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable object LoginRoute
 @Serializable object RegisterRoute
 @Serializable object FavoritesRoute
-@Serializable object ProfileRoute
+@Serializable data class ProfileRoute (val userId: String)
 @Serializable object NotificationsRoute
 @Serializable object ReviewHistoryRoute
 

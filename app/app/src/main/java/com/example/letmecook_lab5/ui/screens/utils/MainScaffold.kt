@@ -266,7 +266,9 @@ fun MainScaffold(
                             }
                         }
                         if (conf.showProfile && isLogged) {
-                            IconButton(onClick = actions.goProfile) {
+                            IconButton(onClick = {
+                                actions.goProfile(SessionManagerFacade.currentUser.value?.uid ?: "")
+                            }) {
                                 Icon(Icons.Default.Person, null)
                             }
                         }

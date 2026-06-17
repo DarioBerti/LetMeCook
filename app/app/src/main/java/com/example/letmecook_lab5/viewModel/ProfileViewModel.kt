@@ -128,14 +128,17 @@ class ProfileViewModel(
     }
 
     companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
+        fun Factory(userId: String): ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val userRepository = application.container.userRepository
                 val storageRepository = application.container.storageRepository
-                val userId = SessionManagerFacade.currentUser.value?.uid
-                    ?: error("ProfileViewModel created with no logged-in user")
-                ProfileViewModel(userRepository, storageRepository, userId)
+
+                ProfileViewModel(
+                    userRepository = userRepository,
+                    storageRepo = storageRepository,
+                    userId = userId
+                )
             }
         }
     }

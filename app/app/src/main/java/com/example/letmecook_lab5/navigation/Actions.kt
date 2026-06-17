@@ -55,7 +55,9 @@ class MainActions(
         }
     }
 
-    val goProfile = { navController.navigate(ProfileRoute) }
+    val goProfile: (String) -> Unit = { userId ->
+        navController.navigate(ProfileRoute(userId))
+    }
 
     val openRecipe: (String) -> Unit = { id ->
         navController.navigate(RecipeDetailRoute(id))

@@ -141,6 +141,56 @@ class FirebaseUserRepository(
         }
     }
 
+    override suspend fun followUser(followerId: String, followedId: String) {
+        if (followerId == followedId) return
+
+        firestore.runBatch { batch ->
+            val followerRef = userCollection.document(followerId)
+            val followedRef = userCollection.document(followedId)
+
+            batch.update(
+                followerRef,
+                "followingIds",
+                FieldValue.arrayUnion(followedId)
+            )
+
+            batch.update(
+                followedRef,
+                "followerIds",
+                FieldValue.arrayUnion(followerId)
+            )
+        }.await()
+    }
+
+    override suspend fun unfollowUser(followerId: String, followedId: String) {
+        if (followerId == followedId) return
+
+        firestore.runBatch { batch ->
+            val followerRef = userCollection.document(followerId)
+            val followedRef = userCollection.document(followedId)
+
+            batch.update(
+                followerRef,
+                "followingIds",
+                FieldValue.arrayRemove(followedId)
+            )
+
+            batch.update(
+                followedRef,
+                "followerIds",
+                FieldValue.arrayRemove(followerId)
+            )
+        }.await()
+    }
+
+    override fun getFollowers(userId: String): Flow<List<String>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFollowing(userId: String): Flow<List<String>> {
+        TODO("Not yet implemented")
+    }
+
     suspend fun ensureUserProfile(firebaseUser: FirebaseUser) {
 
         val uid = firebaseUser.uid

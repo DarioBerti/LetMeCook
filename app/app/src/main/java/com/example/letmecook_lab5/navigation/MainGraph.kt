@@ -169,7 +169,10 @@ fun NavGraphBuilder.mainGraph(
                 onViewAllReviewsClick = { MainActions(navController).goViewAllReviews(args.recipeId) },
                 onViewAllPhotosClick = { MainActions(navController).goViewAllPhotos(args.recipeId) },
                 isLogged = isLogged,
-                currentUserId = currentUserId
+                currentUserId = currentUserId,
+                onAuthorClick = { authorId ->
+                    MainActions(navController).goProfile(authorId)
+                }
             )
         }
 
@@ -226,9 +229,40 @@ fun NavGraphBuilder.mainGraph(
             )
         }
 
-        composable<ProfileRoute> {
+        composable<ProfileRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<ProfileRoute>()
 
-            val firebaseUser by SessionManagerFacade
+            val viewModel: ProfileViewModel = viewModel(
+                factory = ProfileViewModel.Factory(route.userId)
+            )
+
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            ProfileScreen(
+                uiState = uiState,
+                onEditClick = viewModel::startEditing,
+                onDoneClick = viewModel::save,
+                onCancelEdit = viewModel::cancelEditing,
+                onNameChange = viewModel::setName,
+                onNicknameChange = viewModel::setNickname,
+                onEmailChange = viewModel::setEmail,
+                onOpenCamera = viewModel::openCamera,
+                onTakePhoto = viewModel::onImageCaptured,
+                onRemovePhoto = viewModel::removePhoto,
+                onAddDietary = viewModel::addDietaryPreference,
+                onRemoveDietary = viewModel::removeDietaryPreference,
+                onAddCuisine = viewModel::addTypeOfCuisine,
+                onRemoveCuisine = viewModel::removeTypeOfCuisine,
+                onAddIngredient = viewModel::addFavoriteIngredient,
+                onRemoveIngredient = viewModel::removeFavoriteIngredient,
+                onSavedClick = { MainActions(navController).goSaved() },
+                onCookedClick = { MainActions(navController).goCooked() },
+                onPublishedClick = { MainActions(navController).goPublished() },
+                onBack = { MainActions(navController).goBack() } ,
+                onLogoutClick = { SessionManagerFacade.signOut()}
+            )
+
+            /*val firebaseUser by SessionManagerFacade
                 .currentUser
                 .collectAsStateWithLifecycle()
 
@@ -266,7 +300,7 @@ fun NavGraphBuilder.mainGraph(
                     onBack = { MainActions(navController).goBack() } ,
                     onLogoutClick = { SessionManagerFacade.signOut()}
                 )
-            }
+            }*/
         }
 
         composable<PublishedRecipesRoute> {
