@@ -34,6 +34,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.scale
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 
 
 @Composable
@@ -48,9 +57,19 @@ fun IngredientsSection(
     val base = baseServings.coerceAtLeast(1)
     var servings by remember { mutableStateOf(base) }
     var selectedIds by remember { mutableStateOf(setOf<String>()) }
-
     val factor = servings.toDouble() / base
     val scaled = ingredients.map { it.copy(quantity = it.quantity * factor) }
+    val allIds = ingredients.map { it.id }.toSet()
+    val allSelected = allIds.isNotEmpty() && selectedIds.containsAll(allIds)
+    val hasSelection = selectedIds.isNotEmpty()
+
+    val pulse = rememberInfiniteTransition(label = "cartPulse")
+    val cartScale by pulse.animateFloat(
+        initialValue = 1f,
+        targetValue = if (hasSelection) 1.08f else 1f,
+        animationSpec = infiniteRepeatable(tween(800), RepeatMode.Reverse),
+        label = "cartScale"
+    )
 
     Column(
         modifier = Modifier
@@ -64,21 +83,14 @@ fun IngredientsSection(
                 .padding(4.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Icon(
-                imageVector        = Icons.Default.ShoppingBasket,
-                contentDescription = "Ingredients basket",
-                tint               = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier           = Modifier.size(20.dp)
-            )
             Text(
                 text       = "Ingredients",
-                fontSize   = 16.sp,
-                fontWeight = FontWeight.ExtraBold,
+                fontSize   = 18.sp,
+                fontWeight = FontWeight.Bold,
                 color      = MaterialTheme.colorScheme.onBackground,
-                modifier   = Modifier
-                    .weight(1f)
-                    .padding(start = 8.dp)
+                modifier   = Modifier.padding(start = 8.dp)
             )
+            Spacer(Modifier.weight(1f))
             if (isLogged) Row(verticalAlignment = Alignment.CenterVertically) {
                 IconButton(onClick = { if (servings > 1) servings-- }, modifier = Modifier.size(24.dp)) {
                     Icon(imageVector = Icons.Default.Remove, tint = primary, modifier = Modifier.size(14.dp), contentDescription = "-")
@@ -94,21 +106,43 @@ fun IngredientsSection(
                     Icon(imageVector = Icons.Default.Add, tint = primary, modifier = Modifier.size(14.dp), contentDescription = "+")
                 }
             }
-            Spacer(Modifier.width(10.dp))
-            if (isLogged) Icon(
-                imageVector        = Icons.Default.ShoppingCart,
-                contentDescription = "Add to cart",
-                tint               = primary,
-                modifier           = Modifier
-                    .size(25.dp)
+
+            Spacer(Modifier.width(8.dp))
+
+            if (isLogged) Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(if (hasSelection) primary.copy(alpha = 0.15f) else Color.Transparent)
                     .clickable {
                         val toAdd = scaled.filter { it.id in selectedIds }
                         if (toAdd.isNotEmpty()) {
                             onAddToCart(toAdd, servings)
+                            selectedIds = emptySet()
                         }
-                    }
-            )
+                    },
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector        = Icons.Default.ShoppingCart,
+                    contentDescription = "Add to cart",
+                    tint               = primary,
+                    modifier           = Modifier
+                        .size(25.dp)
+                        .scale(cartScale)
+                )
+            }
         }
+
+        if (isLogged) Text(
+            text = if (allSelected) "Deselect all" else "Select all",
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            color = primary,
+            modifier = Modifier
+                .clickable { selectedIds = if (allSelected) emptySet() else allIds }
+                .padding(start = 12.dp, top = 4.dp)
+        )
 
         scaled.forEach { ingredient ->
             IngredientRow(

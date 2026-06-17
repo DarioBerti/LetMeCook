@@ -612,7 +612,7 @@ fun IngredientRow(
         Icon(
             imageVector        = if (selected) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
             contentDescription = null,
-            tint               = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
+            tint               = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inverseOnSurface,
             modifier           = Modifier.size(18.dp)
         )
         Spacer(Modifier.width(12.dp))
