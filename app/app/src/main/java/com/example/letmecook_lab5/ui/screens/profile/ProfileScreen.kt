@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import android.net.Uri
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -60,30 +61,15 @@ fun PortraitLayout(
             .padding(horizontal = 16.dp)
     ) {
         item {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(maxHeight * 1f / 3f),
-                contentAlignment = Alignment.Center
-            ) {
-                ProfileImage(user.profileImageUri, onEditClick = onEditClick)
-            }
-        }
-        item {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(min = maxHeight * 2f / 3f)
-            ) {
-                ProfileInfo(
-                    user = user,
-                    isOwner = isOwner,
-                    onSavedClick = onSavedClick,
-                    onCookedClick = onCookedClick,
-                    onPublishedClick = onPublishedClick,
-                    onLogoutClick = onLogoutClick
-                )
-            }
+            ProfileInfo(
+                user = user,
+                isOwner = isOwner,
+                onSavedClick = onSavedClick,
+                onCookedClick = onCookedClick,
+                onPublishedClick = onPublishedClick,
+                onLogoutClick = onLogoutClick,
+                onEditClick = onEditClick
+            )
         }
     }
 }
@@ -101,39 +87,21 @@ fun LandscapeLayout(
     onLogoutClick: () -> Unit
 )
 {
-    Row(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(horizontal = 16.dp)
     ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.Center
-        ) {
-            ProfileImage(user.profileImageUri, onEditClick = onEditClick)
-        }
-        Box(
-            modifier = Modifier
-                .weight(2f)
-                .fillMaxHeight(),
-            contentAlignment = Alignment.Center
-        ) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxHeight()
-            ) {
-                item { ProfileInfo(
-                    user = user,
-                    isOwner = isOwner,
-                    onSavedClick = onSavedClick,
-                    onCookedClick = onCookedClick,
-                    onPublishedClick = onPublishedClick,
-                    onLogoutClick = onLogoutClick
-                ) }
-            }
+        item {
+            ProfileInfo(
+                user = user,
+                isOwner = isOwner,
+                onSavedClick = onSavedClick,
+                onCookedClick = onCookedClick,
+                onPublishedClick = onPublishedClick,
+                onLogoutClick = onLogoutClick,
+                onEditClick = onEditClick
+            )
         }
     }
 }
@@ -167,24 +135,21 @@ fun ProfileScreen(
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(MaterialTheme.colorScheme.tertiaryContainer)
     ) {
         if (uiState.isEditing && isOwner) {
             Column(modifier = Modifier.fillMaxSize()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp, vertical = 4.dp),
+                        .padding(horizontal = 16.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    IconButton(onClick = onCancelEdit) {
-                        Icon(
-                            imageVector = Icons.Default.Close,
-                            contentDescription = "Cancel",
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
+                    OutlinedButton(
+                        onClick = onCancelEdit,
+                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary)
+                    ) { Text("Cancel", fontWeight = FontWeight.Bold) }
                     Button(onClick = onDoneClick) { Text("Done") }
                 }
                 EditPane(
@@ -240,12 +205,14 @@ fun ProfileScreen(
 fun ProfileListSection(title: String, items: List<String>, color: Color) {
     Column(
         modifier = Modifier.fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
             text = title,
-            fontSize = 12.sp,
-            color = MaterialTheme.colorScheme.onSurface
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
 
         if (items.isEmpty()) {
@@ -286,24 +253,24 @@ fun StatBox(title: String, value: String, modifier: Modifier) {
     Column(
         modifier = modifier
             .shadow(4.dp, RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(20.dp))
-            .padding(vertical = 8.dp),
+            .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(20.dp))
+            .padding(vertical = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(2.dp)
     ) {
         Text(
             text = value,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = MaterialTheme.colorScheme.onBackground,
-            lineHeight = 16.sp
+            fontSize = 14.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.onPrimary,
+            lineHeight = 14.sp
         )
         Text(
             text = title,
-            fontSize = 10.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurface,
-            lineHeight = 10.sp
+            fontSize = 9.sp,
+            fontWeight = FontWeight.ExtraBold,
+            color = MaterialTheme.colorScheme.onPrimary,
+            lineHeight = 9.sp
         )
 
     }
@@ -324,8 +291,8 @@ fun ForYouBox(title: String, icon: @Composable () -> Unit, onClick: () -> Unit, 
         Text(
             text = title,
             fontSize = 10.sp,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurface,
+            fontWeight = FontWeight.ExtraBold,
+            color = Color.Black,
             lineHeight = 10.sp
         )
     }
@@ -333,14 +300,14 @@ fun ForYouBox(title: String, icon: @Composable () -> Unit, onClick: () -> Unit, 
 
 // Composable riutilizzabile x la foto profilo
 @Composable
-fun ProfileImage(imageUri: String?, onEditClick: (() -> Unit)? = null) {
-    Box(modifier = Modifier.size(150.dp)) {
+fun ProfileImage(imageUri: String?, onEditClick: (() -> Unit)? = null, size: Dp = 150.dp) {
+    Box(modifier = Modifier.size(size)) {
         if (imageUri != null) {
             AsyncImage(
                 model = imageUri,
                 contentDescription = "Immagine del profilo dell'utente",
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(size)
                     .border(width = 3.dp, color = MaterialTheme.colorScheme.primary, CircleShape)
                     .clip(CircleShape),
                 contentScale = ContentScale.Crop
@@ -348,7 +315,7 @@ fun ProfileImage(imageUri: String?, onEditClick: (() -> Unit)? = null) {
         } else {
             Box(
                 modifier = Modifier
-                    .size(150.dp)
+                    .size(size)
                     .border(width = 3.dp, color = MaterialTheme.colorScheme.primary, CircleShape)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.surface),
@@ -390,101 +357,60 @@ fun ProfileInfo(
     onSavedClick: () -> Unit,
     onCookedClick: () -> Unit,
     onPublishedClick: () -> Unit,
-    onLogoutClick: () -> Unit
+    onLogoutClick: () -> Unit,
+    onEditClick: (() -> Unit)? = null
 ) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Full name
+        // Header: picture on the left, name/nickname + stats on the right
         Row(
             modifier = Modifier.fillMaxWidth()
                 .padding(top = 12.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text        = user.fullName,
-                fontSize    = 22.sp,
-                fontWeight  = FontWeight.Bold,
-                color       = MaterialTheme.colorScheme.onBackground
-            )
-        }
-        // Cooking role
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(vertical = 2.dp),
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                text        = user.cookingRole,
-                fontSize    = 16.sp,
-                fontWeight  = FontWeight.SemiBold,
-                color       = MaterialTheme.colorScheme.primary
-            )
-        }
-        Button(
-            onClick = onLogoutClick,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text("Logout")
-        }
-        // Followers + Following
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            StatBox(
-                "FOLLOWERS",
-                user.followers.toString(),
-                modifier = Modifier.weight(1f)
+            ProfileImage(
+                imageUri = user.profileImageUri,
+                onEditClick = onEditClick,
+                size = 110.dp
             )
-            StatBox(
-                "FOLLOWING",
-                user.following.toString(),
-                modifier = Modifier.weight(1f)
-            )
-        }
-        // Nickname
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(top = 4.dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text        = "@${user.nickname}",
-                fontSize    = 16.sp,
-                fontWeight  = FontWeight.SemiBold,
-                color       = MaterialTheme.colorScheme.onBackground
-            )
-        }
-        // Email
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text        = user.email,
-                fontSize    = 14.sp,
-                fontWeight  = FontWeight.Medium,
-                color       = MaterialTheme.colorScheme.onSurface
-            )
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text        = user.fullName,
+                    fontSize    = 20.sp,
+                    fontWeight  = FontWeight.Bold,
+                    color       = MaterialTheme.colorScheme.onBackground
+                )
+                Text(
+                    text        = user.cookingRole,
+                    fontSize    = 14.sp,
+                    fontWeight  = FontWeight.SemiBold,
+                    color       = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    StatBox(
+                        "FOLLOWERS",
+                        user.followers.toString(),
+                        modifier = Modifier.weight(1f)
+                    )
+                    StatBox(
+                        "FOLLOWING",
+                        user.following.toString(),
+                        modifier = Modifier.weight(1f)
+                    )
+                }
+            }
         }
         // For you
         if(isOwner){
+            Spacer(Modifier.height(16.dp))
             Row(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(vertical = 4.dp),
-            ) {
-                Text(
-                    text        = "For you",
-                    fontSize    = 16.sp,
-                    fontWeight  = FontWeight.SemiBold,
-                    color       = MaterialTheme.colorScheme.onBackground
-                )
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth()
-                    .padding(vertical = 4.dp),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 ForYouBox(
@@ -519,27 +445,74 @@ fun ProfileInfo(
                 )
             }
         }
-        // Preferences
-        Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(top = 12.dp),
+        Spacer(Modifier.height(14.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White, RoundedCornerShape(12.dp))
+                .padding(horizontal = 16.dp)
+                .padding(top = 8.dp, bottom = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(2.dp)
         ) {
-            Text(
-                text        = "Preferences",
-                fontSize    = 16.sp,
-                fontWeight  = FontWeight.SemiBold,
-                color       = MaterialTheme.colorScheme.onBackground
-            )
+            ProfileListSection("Dietary preferences:",
+                user.dietaryPreferences,
+                color = MaterialTheme.colorScheme.secondaryContainer)
+            ProfileListSection("Types of cuisine:",
+                user.typesOfCuisine,
+                color = MaterialTheme.colorScheme.secondaryContainer)
+            ProfileListSection("Favorite ingredients:",
+                user.favoriteIngredients,
+                color = MaterialTheme.colorScheme.secondaryContainer)
         }
-        ProfileListSection("DIETARY PREFERENCES",
-            user.dietaryPreferences,
-            color = MaterialTheme.colorScheme.primaryContainer)
-        ProfileListSection("TYPES OF CUISINE",
-            user.typesOfCuisine,
-            color = MaterialTheme.colorScheme.secondaryContainer)
-        ProfileListSection("FAVORITE INGREDIENTS",
-            user.favoriteIngredients,
-            color = MaterialTheme.colorScheme.tertiaryContainer)
+        Spacer(Modifier.height(14.dp))
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White, RoundedCornerShape(12.dp))
+                .padding(horizontal = 16.dp)
+                .padding(top = 16.dp, bottom = 16.dp)
+        ) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text        = "Username: ",
+                    fontSize    = 14.sp,
+                    fontWeight  = FontWeight.Bold,
+                    color       = Color.Black
+                )
+                Text(
+                    text        = "@${user.nickname}",
+                    fontSize    = 14.sp,
+                    fontWeight  = FontWeight.Medium,
+                    color       = Color.Black
+                )
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth()
+                    .padding(top = 4.dp)
+            ) {
+                Text(
+                    text        = "Email: ",
+                    fontSize    = 14.sp,
+                    fontWeight  = FontWeight.Bold,
+                    color       = Color.Black
+                )
+                Text(
+                    text        = user.email,
+                    fontSize    = 14.sp,
+                    fontWeight  = FontWeight.Medium,
+                    color       = Color.Black
+                )
+            }
+            Button(
+                onClick = onLogoutClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
+            ) {
+                Text("Logout")
+            }
+        }
+        Spacer(Modifier.height(14.dp))
     }
 }
 

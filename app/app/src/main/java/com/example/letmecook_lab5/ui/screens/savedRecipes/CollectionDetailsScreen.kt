@@ -32,7 +32,7 @@ fun CollectionDetailsRoute(
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppLetMeCook("Collection details", onClick = onBack)
         uiState.collection?.let { col ->
-            CollectionRow(collection = col, onClick = {}, clickable = false,)
+            CollectionRow(collection = col, onClick = {}, clickable = false)
         }
         Spacer(modifier = Modifier.height(16.dp))
 
