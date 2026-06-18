@@ -34,3 +34,7 @@ object PublishedRecipesRoute
 
 @Serializable
 object CookedRecipesRoute
+
+@Serializable data class FollowersRoute(val userId: String)
+
+@Serializable data class FollowingRoute(val userId: String)

@@ -76,4 +76,11 @@ class MainActions(
     val goCooked = { navController.navigate(CookedRecipesRoute) }
     val goPublished = { navController.navigate(PublishedRecipesRoute) }
 
+    val goFollowers: (String) -> Unit = { userId ->
+        navController.navigate(FollowersRoute(userId))
+    }
+
+    val goFollowing: (String) -> Unit = { userId ->
+        navController.navigate(FollowingRoute(userId))
+    }
 }

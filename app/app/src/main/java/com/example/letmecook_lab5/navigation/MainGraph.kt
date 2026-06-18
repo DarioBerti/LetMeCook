@@ -19,6 +19,7 @@ import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.ui.screens.groceries.GroceriesPlaceholder
 import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
+import com.example.letmecook_lab5.ui.screens.profile.UserListScreen
 import com.example.letmecook_lab5.ui.screens.publishedRecipes.OwnedRecipeProposalList
 import com.example.letmecook_lab5.ui.screens.recipeList.RecipePhotosScreen
 import com.example.letmecook_lab5.ui.screens.search.SearchScreen
@@ -32,6 +33,7 @@ import com.example.letmecook_lab5.viewModel.HomeScreenViewModel
 import com.example.letmecook_lab5.viewModel.NotificationViewModel
 import com.example.letmecook_lab5.viewModel.OwnedRecipeProposalListViewModel
 import com.example.letmecook_lab5.viewModel.RecipeListViewModel
+import com.example.letmecook_lab5.viewModel.UserListViewModel
 
 fun NavGraphBuilder.mainGraph(
     navController: NavHostController
@@ -145,7 +147,6 @@ fun NavGraphBuilder.mainGraph(
                 }
             )
         }
-
 
         composable<RecipeDetailRoute> { backStackEntry ->
             val firebaseUser by SessionManagerFacade
@@ -261,7 +262,9 @@ fun NavGraphBuilder.mainGraph(
                 onPublishedClick = { MainActions(navController).goPublished() },
                 onBack = { MainActions(navController).goBack() } ,
                 onLogoutClick = { SessionManagerFacade.signOut()},
-                onFollowClick = viewModel::toggleFollow
+                onFollowClick = viewModel::toggleFollow,
+                onFollowersClick = { userId -> MainActions(navController).goFollowers(userId) },
+                onFollowingClick = { userId -> MainActions(navController).goFollowing(userId) }
             )
 
             /*val firebaseUser by SessionManagerFacade
@@ -330,6 +333,46 @@ fun NavGraphBuilder.mainGraph(
 
         composable<CookedRecipesRoute> {
             CookedRecipesScreen()
+        }
+
+        composable<FollowersRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<FollowersRoute>()
+
+            val viewModel: UserListViewModel = viewModel(
+                factory = UserListViewModel.Factory(
+                    userId = route.userId,
+                    showFollowers = true
+                )
+            )
+
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            UserListScreen(
+                title = "followers",
+                uiState = uiState,
+                onSearchChange = viewModel::onSearchChange,
+                onUserClick = { userId -> MainActions(navController).goProfile(userId) },
+            )
+        }
+
+        composable<FollowingRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<FollowingRoute>()
+
+            val viewModel: UserListViewModel = viewModel(
+                factory = UserListViewModel.Factory(
+                    userId = route.userId,
+                    showFollowers = false
+                )
+            )
+
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+            UserListScreen(
+                title = "following",
+                uiState = uiState,
+                onSearchChange = viewModel::onSearchChange,
+                onUserClick = { userId -> MainActions(navController).goProfile(userId) },
+            )
         }
 
     }

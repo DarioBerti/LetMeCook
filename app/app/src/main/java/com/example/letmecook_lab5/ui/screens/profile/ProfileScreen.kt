@@ -53,7 +53,9 @@ fun PortraitLayout(
     onEditClick: (() -> Unit)? = null,
     onLogoutClick: () -> Unit,
     isFollowing: Boolean,
-    onFollowClick: () -> Unit
+    onFollowClick: () -> Unit,
+    onFollowersClick: (String) -> Unit,
+    onFollowingClick: (String) -> Unit
 )
 {
     LazyColumn(
@@ -85,7 +87,9 @@ fun PortraitLayout(
                     onPublishedClick = onPublishedClick,
                     onLogoutClick = onLogoutClick,
                     isFollowing = isFollowing,
-                    onFollowClick = onFollowClick
+                    onFollowClick = onFollowClick,
+                    onFollowersClick = onFollowersClick,
+                    onFollowingClick = onFollowingClick
                 )
             }
         }
@@ -104,7 +108,9 @@ fun LandscapeLayout(
     onEditClick: (() -> Unit)? = null,
     onLogoutClick: () -> Unit,
     isFollowing: Boolean,
-    onFollowClick: () -> Unit
+    onFollowClick: () -> Unit,
+    onFollowersClick: (String) -> Unit,
+    onFollowingClick: (String) -> Unit
 )
 {
     Row(
@@ -139,7 +145,9 @@ fun LandscapeLayout(
                     onPublishedClick = onPublishedClick,
                     onLogoutClick = onLogoutClick,
                     isFollowing = isFollowing,
-                    onFollowClick = onFollowClick
+                    onFollowClick = onFollowClick,
+                    onFollowersClick = onFollowersClick,
+                    onFollowingClick = onFollowingClick
                 ) }
             }
         }
@@ -168,7 +176,9 @@ fun ProfileScreen(
     onSavedClick: () -> Unit,
     onBack: () -> Unit,
     onLogoutClick: () -> Unit,
-    onFollowClick: () -> Unit
+    onFollowClick: () -> Unit,
+    onFollowersClick: (String) -> Unit,
+    onFollowingClick: (String) -> Unit
 ) {
     val displayUser = uiState.draft ?: uiState.user ?: return
     val currentUid = SessionManagerFacade.currentUser.collectAsState().value?.uid
@@ -227,7 +237,9 @@ fun ProfileScreen(
                     onPublishedClick = onPublishedClick,
                     onLogoutClick = onLogoutClick,
                     isFollowing = uiState.isFollowing,
-                    onFollowClick = onFollowClick
+                    onFollowClick = onFollowClick,
+                    onFollowersClick = onFollowersClick,
+                    onFollowingClick = onFollowingClick
                 )
             } else {
                 PortraitLayout(
@@ -240,7 +252,9 @@ fun ProfileScreen(
                     onPublishedClick = onPublishedClick,
                     onLogoutClick = onLogoutClick,
                     isFollowing = uiState.isFollowing,
-                    onFollowClick = onFollowClick
+                    onFollowClick = onFollowClick,
+                    onFollowersClick = onFollowersClick,
+                    onFollowingClick = onFollowingClick
                 )
             }
         }
@@ -405,7 +419,9 @@ fun ProfileInfo(
     onPublishedClick: () -> Unit,
     onLogoutClick: () -> Unit,
     isFollowing: Boolean,
-    onFollowClick: () -> Unit
+    onFollowClick: () -> Unit,
+    onFollowersClick: (String) -> Unit,
+    onFollowingClick: (String) -> Unit
 ) {
     val currentUid = SessionManagerFacade.currentUser.collectAsState().value?.uid
 
@@ -461,12 +477,16 @@ fun ProfileInfo(
             StatBox(
                 "FOLLOWERS",
                 user.followerIds.size.toString(),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onFollowersClick(user.id) }
             )
             StatBox(
                 "FOLLOWING",
                 user.followingIds.size.toString(),
-                modifier = Modifier.weight(1f)
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { onFollowingClick(user.id) }
             )
         }
         // Nickname

@@ -59,6 +59,8 @@ import com.example.letmecook_lab5.navigation.AppBottomBar
 import com.example.letmecook_lab5.navigation.AuthGraph
 import com.example.letmecook_lab5.navigation.CommunityRoute
 import com.example.letmecook_lab5.navigation.CookedRecipesRoute
+import com.example.letmecook_lab5.navigation.FollowersRoute
+import com.example.letmecook_lab5.navigation.FollowingRoute
 import com.example.letmecook_lab5.navigation.GroceriesRoute
 import com.example.letmecook_lab5.navigation.HomeRoute
 import com.example.letmecook_lab5.navigation.LoginRoute
@@ -193,6 +195,12 @@ fun MainScaffold(
 
         currentDestination?.hasRoute(CookedRecipesRoute::class) == true ->
             TopBarConfig(title = "Cooked Recipes", showBack = true)
+
+        currentDestination?.hasRoute(FollowersRoute::class) == true ->
+            TopBarConfig(title = "Followers", showBack = true)
+
+        currentDestination?.hasRoute(FollowingRoute::class) == true ->
+            TopBarConfig(title = "Following", showBack = true)
 
         else -> null
     }
