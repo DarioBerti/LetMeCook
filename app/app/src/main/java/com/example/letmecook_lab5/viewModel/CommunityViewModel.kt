@@ -94,6 +94,8 @@ class CommunityViewModel(
         val events = mutableListOf<CommunityEvent>()
 
         recipes.forEach { recipe ->
+            if (recipe.ownerId == currentUser.id) return@forEach
+
             if (followingOnly && recipe.ownerId !in currentUser.followingIds) return@forEach
 
             val author = userMap[recipe.ownerId] ?: return@forEach
@@ -115,6 +117,8 @@ class CommunityViewModel(
         }
 
         reviews.forEach { review ->
+            if (review.authorId == currentUser.id) return@forEach
+
             if (followingOnly && review.authorId !in currentUser.followingIds) return@forEach
 
             val recipe = recipes.find {

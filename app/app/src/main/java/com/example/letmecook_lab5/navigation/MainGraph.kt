@@ -22,6 +22,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.NotificationType
+import com.example.letmecook_lab5.ui.components.common.CommunityNotAvailable
 import com.example.letmecook_lab5.ui.screens.groceries.GroceriesPlaceholder
 import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
 import com.example.letmecook_lab5.ui.screens.profile.UserListScreen
@@ -99,14 +100,9 @@ fun NavGraphBuilder.mainGraph(
 
         composable<CommunityRoute> {
             val firebaseUser by SessionManagerFacade.currentUser.collectAsStateWithLifecycle()
-
-            if (firebaseUser == null) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Login required to access the community")
-                }
+            val isLogged = firebaseUser?.isAnonymous == false
+            if (!isLogged) {
+                CommunityNotAvailable()
             } else {
                 val viewModel: CommunityViewModel = viewModel(
                     factory = CommunityViewModel.Factory

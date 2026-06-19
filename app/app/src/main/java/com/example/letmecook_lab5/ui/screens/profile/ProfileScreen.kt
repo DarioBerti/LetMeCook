@@ -549,13 +549,15 @@ fun ProfileInfo(
                     color       = Color.Black
                 )
             }
-            Button(
-                onClick = onLogoutClick,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text("Logout")
+            if (isOwner) {
+                Button(
+                    onClick = onLogoutClick,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Logout")
+                }
             }
         }
         Spacer(Modifier.height(14.dp))
