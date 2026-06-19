@@ -1,6 +1,9 @@
 package com.example.letmecook_lab5.navigation
 
 import android.util.Log
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -13,6 +16,8 @@ import com.example.letmecook_lab5.ui.screens.notifications.NotificationsScreen
 import com.example.letmecook_lab5.ui.screens.profile.ProfileScreen
 import com.example.letmecook_lab5.ui.screens.recipeList.RecipeReviewsScreen
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.auth.SessionManagerFacade
@@ -27,6 +32,7 @@ import com.example.letmecook_lab5.ui.screens.recipeList.ShowRecipeProposalDetail
 import com.example.letmecook_lab5.viewModel.ReviewViewModel
 import com.example.letmecook_lab5.ui.screens.savedRecipes.SavedRecipesRoute as SavedRecipesScreenRoute
 import com.example.letmecook_lab5.ui.screens.savedRecipes.CollectionDetailsRoute
+import com.example.letmecook_lab5.viewModel.CommunityViewModel
 import com.example.letmecook_lab5.viewModel.GroceriesViewModel
 import com.example.letmecook_lab5.viewModel.ProfileViewModel
 import com.example.letmecook_lab5.viewModel.HomeScreenViewModel
@@ -92,7 +98,30 @@ fun NavGraphBuilder.mainGraph(
 
 
         composable<CommunityRoute> {
-            CommunityScreen()
+            val firebaseUser by SessionManagerFacade.currentUser.collectAsStateWithLifecycle()
+
+            if (firebaseUser == null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Login required to access the community")
+                }
+            } else {
+                val viewModel: CommunityViewModel = viewModel(
+                    factory = CommunityViewModel.Factory
+                )
+
+                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+                CommunityScreen(
+                    uiState = uiState,
+                    onFollowingClick = viewModel::showFollowingFeed,
+                    onPopularClick = viewModel::showPopularFeed,
+                    onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
+                    onUserClick = { userId -> MainActions(navController).goProfile(userId) }
+                )
+            }
         }
 
         composable<GroceriesRoute> {

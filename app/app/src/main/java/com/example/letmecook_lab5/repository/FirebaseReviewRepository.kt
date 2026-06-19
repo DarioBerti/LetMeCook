@@ -37,6 +37,14 @@ class FirebaseReviewRepository(
             }
     }
 
+    override fun getAllReviews(): Flow<List<Review>> {
+        return reviewsCollection
+            .snapshots()
+            .map { snapshot ->
+                snapshot.toObjects(Review::class.java)
+            }
+    }
+
     override suspend fun addReview(review: Review) {
         try {
             recipesCollection.document(review.recipeId)
@@ -72,5 +80,6 @@ class FirebaseReviewRepository(
             Log.d("FirebaseReviewRepository", "Errore create: ${e.message}")
         }
     }
+
 
 }
