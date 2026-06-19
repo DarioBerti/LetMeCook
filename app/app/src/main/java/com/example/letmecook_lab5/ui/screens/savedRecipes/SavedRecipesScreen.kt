@@ -3,6 +3,7 @@ package com.example.letmecook_lab5.ui.screens.savedRecipes
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -28,6 +29,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,7 +38,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.model.Collection
 import com.example.letmecook_lab5.model.Recipe
-import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.ui.components.common.ImagePlaceholder
 import com.example.letmecook_lab5.ui.components.common.TopAppLetMeCook
 import com.example.letmecook_lab5.ui.components.recipeList.RecipeCard
@@ -139,7 +141,12 @@ fun SavedRecipesScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         uiState.collections.forEach { col ->
-                            CollectionRow(col, onClick = { onCollectionClick(col.id) }, onDelete = { onDeleteCollection(col.id) })                        }
+                            CollectionRow(
+                                col,
+                                onClick = { onCollectionClick(col.id) },
+                                onDelete = { onDeleteCollection(col.id) }
+                            )
+                        }
                         Spacer(modifier = Modifier.height(80.dp))
                     }
 
@@ -234,7 +241,7 @@ fun CollectionRow(
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 6.dp)
             .clip(RoundedCornerShape(16.dp))
-            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .background(Color.White)
             .then(if (clickable) Modifier.clickable { onClick() } else Modifier)
             .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -267,7 +274,8 @@ fun CollectionRow(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
                     .clip(RoundedCornerShape(50.dp))
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(Color.White)
+                    .border(1.dp, MaterialTheme.colorScheme.primary, RoundedCornerShape(50.dp))
                     .padding(horizontal = 8.dp, vertical = 2.dp)
             )
         }
@@ -332,9 +340,18 @@ private fun NewCollectionDialog(
         shape = RoundedCornerShape(20.dp),
         title = {
             Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Text("New Collection", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
+                Text(
+                    "New Collection",
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.weight(1f)
+                )
                 IconButton(onClick = onDismiss) {
-                    Icon(Icons.Default.Close, contentDescription = "Close")
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "Close",
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
         },
@@ -366,14 +383,14 @@ private fun NewCollectionDialog(
                     }
                     Text(
                         text = if (imageUri != null) "Tap to change photo" else "Tap to add photo",
-                        color = MaterialTheme.colorScheme.onPrimary,
+                        color = Color.Black,
                         fontWeight = FontWeight.ExtraBold,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .fillMaxWidth()
-                            .background(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.45f))
+                            .background(Color.White)
                             .padding(vertical = 6.dp)
                     )
                 }
@@ -381,6 +398,7 @@ private fun NewCollectionDialog(
                     value = name,
                     onValueChange = { name = it },
                     label = { Text("Name *") },
+                    textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -388,6 +406,7 @@ private fun NewCollectionDialog(
                     value = description,
                     onValueChange = { description = it },
                     label = { Text("Description *") },
+                    textStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold),
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -397,7 +416,11 @@ private fun NewCollectionDialog(
                 Button(
                     onClick = { onCreate(name, description, imageUri?.toString()) },
                     enabled = isValid,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
+                        disabledContentColor = MaterialTheme.colorScheme.onPrimary
+                    )
                 ) {
                     Text("Create", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }

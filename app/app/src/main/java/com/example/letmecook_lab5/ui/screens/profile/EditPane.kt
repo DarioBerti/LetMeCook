@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -25,6 +26,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -81,7 +84,11 @@ fun EditPane(
         return
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp)
+    ) {
         item {
             EditPaneContent(
                 user = user,
@@ -99,36 +106,40 @@ fun EditPane(
                 onTakePhoto = onTakePhoto,
                 onRemovePhoto = onRemovePhoto
             )
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(14.dp))
         }
         item {
-            EditableProfileListSection(
-                title = "DIETARY PREFERENCES",
-                items = user.dietaryPreferences,
-                onAdd = { bottomState = BottomMenuStates.Dietary },
-                onDismiss = onRemoveDietary,
-                color = MaterialTheme.colorScheme.primaryContainer
-            )
-            Spacer(Modifier.height(16.dp))
-        }
-        item {
-            EditableProfileListSection(
-                title = "TYPES OF CUISINE",
-                items = user.typesOfCuisine,
-                onAdd = { bottomState = BottomMenuStates.Cuisine },
-                onDismiss = onRemoveCuisine,
-                color = MaterialTheme.colorScheme.secondaryContainer
-            )
-            Spacer(Modifier.height(16.dp))
-        }
-        item {
-            EditableProfileListSection(
-                title = "FAVORITE INGREDIENTS",
-                items = user.favoriteIngredients,
-                onAdd = { bottomState = BottomMenuStates.Ingredients },
-                onDismiss = onRemoveIngredient,
-                color = MaterialTheme.colorScheme.tertiaryContainer
-            )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.White, RoundedCornerShape(12.dp))
+                    .padding(horizontal = 16.dp)
+                    .padding(top = 8.dp, bottom = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(2.dp)
+            ) {
+                EditableProfileListSection(
+                    title = "Dietary preferences:",
+                    items = user.dietaryPreferences,
+                    onAdd = { bottomState = BottomMenuStates.Dietary },
+                    onDismiss = onRemoveDietary,
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+                EditableProfileListSection(
+                    title = "Types of cuisine:",
+                    items = user.typesOfCuisine,
+                    onAdd = { bottomState = BottomMenuStates.Cuisine },
+                    onDismiss = onRemoveCuisine,
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+                EditableProfileListSection(
+                    title = "Favorite ingredients:",
+                    items = user.favoriteIngredients,
+                    onAdd = { bottomState = BottomMenuStates.Ingredients },
+                    onDismiss = onRemoveIngredient,
+                    color = MaterialTheme.colorScheme.secondaryContainer
+                )
+            }
+            Spacer(Modifier.height(14.dp))
         }
     }
 
@@ -194,76 +205,97 @@ private fun EditPaneContent(
     onTakePhoto: (Uri) -> Unit,
     onRemovePhoto: () -> Unit
 ) {
+    val inputTextStyle = TextStyle(color = Color.Black, fontWeight = FontWeight.Bold, fontSize = 16.sp)
+
     Column(
-        Modifier.fillMaxSize(),
+        Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Spacer(Modifier.height(16.dp))
+        Spacer(Modifier.height(12.dp))
 
-        Box(contentAlignment = Alignment.Center) {
-            ProfileImage(user.profileImageUri)
-            EditPhotoButton(
-                onRequestCamera = onRequestCamera,
-                onPickGallery = onTakePhoto,
-                onRemovePhoto = onRemovePhoto,
-                modifier = Modifier.align(Alignment.BottomEnd)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White, RoundedCornerShape(12.dp))
+                .padding(16.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Box(contentAlignment = Alignment.Center) {
+                    ProfileImage(user.profileImageUri, size = 110.dp)
+                    EditPhotoButton(
+                        onRequestCamera = onRequestCamera,
+                        onPickGallery = onTakePhoto,
+                        onRemovePhoto = onRemovePhoto,
+                        modifier = Modifier.align(Alignment.BottomEnd)
+                    )
+                }
+
+                Column(modifier = Modifier.weight(1f)) {
+                OutlinedTextField(
+                value = user.fullName,
+                onValueChange = onNameChange,
+                label = { Text("Name") },
+                isError = validation.nameError.isNotBlank(),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = inputTextStyle,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Words,
+                    autoCorrectEnabled = false,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
             )
+            if (validation.nameError.isNotBlank())
+                Text(validation.nameError, color = MaterialTheme.colorScheme.error)
+
+            Spacer(Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = user.nickname,
+                onValueChange = onNicknameChange,
+                label = { Text("Nickname") },
+                isError = validation.nicknameError.isNotBlank(),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = inputTextStyle,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.Unspecified,
+                    autoCorrectEnabled = false,
+                    keyboardType = KeyboardType.Text,
+                    imeAction = ImeAction.Next
+                )
+            )
+            if (validation.nicknameError.isNotBlank())
+                Text(validation.nicknameError, color = MaterialTheme.colorScheme.error)
+                }
+            }
+
+            Spacer(Modifier.height(12.dp))
+
+            OutlinedTextField(
+                value = user.email,
+                onValueChange = onEmailChange,
+                label = { Text("Email Address") },
+                isError = validation.emailError.isNotBlank(),
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+                textStyle = inputTextStyle,
+                keyboardOptions = KeyboardOptions(
+                    capitalization = KeyboardCapitalization.None,
+                    autoCorrectEnabled = false,
+                    keyboardType = KeyboardType.Email,
+                    imeAction = ImeAction.Done
+                )
+            )
+            if (validation.emailError.isNotBlank())
+                Text(validation.emailError, color = MaterialTheme.colorScheme.error)
         }
-
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = user.fullName,
-            onValueChange = onNameChange,
-            label = { Text("Name") },
-            isError = validation.nameError.isNotBlank(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Words,
-                autoCorrectEnabled = false,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            )
-        )
-        if (validation.nameError.isNotBlank())
-            Text(validation.nameError, color = MaterialTheme.colorScheme.error)
-
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = user.nickname,
-            onValueChange = onNicknameChange,
-            label = { Text("Nickname") },
-            isError = validation.nicknameError.isNotBlank(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.Unspecified,
-                autoCorrectEnabled = false,
-                keyboardType = KeyboardType.Text,
-                imeAction = ImeAction.Next
-            )
-        )
-        if (validation.nicknameError.isNotBlank())
-            Text(validation.nicknameError, color = MaterialTheme.colorScheme.error)
-
-        Spacer(Modifier.height(16.dp))
-
-        OutlinedTextField(
-            value = user.email,
-            onValueChange = onEmailChange,
-            label = { Text("Email Address") },
-            isError = validation.emailError.isNotBlank(),
-            singleLine = true,
-            keyboardOptions = KeyboardOptions(
-                capitalization = KeyboardCapitalization.None,
-                autoCorrectEnabled = false,
-                keyboardType = KeyboardType.Email,
-                imeAction = ImeAction.Done
-            )
-        )
-        if (validation.emailError.isNotBlank())
-            Text(validation.emailError, color = MaterialTheme.colorScheme.error)
     }
 }
 
@@ -331,10 +363,10 @@ private fun EditableProfileListSection(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp)
+            .padding(vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(title, fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurface)
-        Spacer(Modifier.height(8.dp))
+        Text(title, fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Color.Black)
         FlowRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),

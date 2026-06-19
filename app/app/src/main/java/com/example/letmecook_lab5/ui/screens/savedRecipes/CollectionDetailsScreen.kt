@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.model.Recipe
-import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.ui.components.common.TopAppLetMeCook
 import com.example.letmecook_lab5.ui.components.recipeList.RecipeCard
 import com.example.letmecook_lab5.viewModel.CollectionDetailsViewModel
@@ -32,7 +31,7 @@ fun CollectionDetailsRoute(
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppLetMeCook("Collection details", onClick = onBack)
         uiState.collection?.let { col ->
-            CollectionRow(collection = col, onClick = {}, clickable = false,)
+            CollectionRow(collection = col, onClick = {}, clickable = false)
         }
         Spacer(modifier = Modifier.height(16.dp))
 

@@ -1,7 +1,6 @@
 package com.example.letmecook_lab5.ui.screens.recipeList
 
 import android.util.Log
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,20 +23,13 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.AcUnit
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.BarChart
 import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.Bookmark
 import androidx.compose.material.icons.filled.CheckBoxOutlineBlank
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Remove
-import androidx.compose.material.icons.filled.ShoppingBasket
 import androidx.compose.material.icons.filled.ShoppingCart
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -50,7 +42,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -70,10 +61,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.letmecook_lab5.domain.RecipeRepository
-import com.example.letmecook_lab5.session.SessionManager
 import com.example.letmecook_lab5.ui.components.common.ImagePlaceholder
-import com.example.letmecook_lab5.viewModel.ShowRecipeDetailsUiState
 import com.example.letmecook_lab5.viewModel.ShowRecipeDetailsViewModel
 import com.example.letmecook_lab5.model.Ingredient
 import com.example.letmecook_lab5.model.Step
@@ -84,14 +72,15 @@ import com.example.letmecook_lab5.ui.components.recipe.photos.CommunityPhotoDial
 import com.example.letmecook_lab5.ui.components.recipe.reviews.ReviewItem
 import com.example.letmecook_lab5.ui.components.recipe.reviews.ReviewFormDialog
 import com.example.letmecook_lab5.viewModel.ReviewViewModel
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.DisposableEffect
 import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.ui.components.recipe.recipeProposal.AuthorRow
 import com.example.letmecook_lab5.ui.components.recipe.recipeProposal.ImageSection
 import com.example.letmecook_lab5.ui.components.recipe.recipeProposal.IngredientsSection
 import com.example.letmecook_lab5.ui.screens.utils.RecipeOptions
+import androidx.compose.material.icons.filled.CheckBox
+import androidx.compose.material3.ElevatedCard
+import kotlinx.coroutines.delay
 
 @Composable
 fun ShowRecipeProposalDetailsRoute(
@@ -138,7 +127,8 @@ fun ShowRecipeProposalDetailsRoute(
             currentUserId = currentUserId,
             ownerName = uiState.ownerName,
             ownerAvatar = uiState.ownerAvatar,
-            onAuthorClick = onAuthorClick
+            onAuthorClick = onAuthorClick,
+            onAddToGroceryList = viewModel::addToGroceryList
         )
     }
 }
@@ -162,8 +152,9 @@ fun ShowRecipeProposalDetails(
     isLogged: Boolean,
     currentUserId: String?,
     ownerName: String,
+    onAuthorClick: (String) -> Unit,
     ownerAvatar: String?,
-    onAuthorClick: (String) -> Unit
+    onAddToGroceryList: (List<Ingredient>, Int) -> Unit
 ) {
     Log.d("Recipe", recipe.toString())
     val onBackground = MaterialTheme.colorScheme.onBackground
@@ -171,6 +162,7 @@ fun ShowRecipeProposalDetails(
     var showSaveDialog by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
     var showReviewSheet by remember { mutableStateOf(false) }
+    var showCartConfirmation by remember { mutableStateOf(false) }
     val isSaved = collections.any { recipe.id in it.recipeIds }
     val isOwner = currentUserId != null && recipe.ownerId == currentUserId
     val hasReviewed = currentUserId != null && reviews.any { it.authorId == currentUserId }
@@ -222,7 +214,7 @@ fun ShowRecipeProposalDetails(
         }
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -262,7 +254,11 @@ fun ShowRecipeProposalDetails(
                 IngredientsSection(
                     ingredients  = recipe.ingredients,
                     baseServings = recipe.servings,
-                    isLogged     = isLogged
+                    isLogged     = isLogged,
+                    onAddToCart  = { items, servings ->
+                        onAddToGroceryList(items, servings)
+                        showCartConfirmation = true
+                    }
                 )
             }
             item { Spacer(Modifier.height(12.dp)) }
@@ -282,7 +278,12 @@ fun ShowRecipeProposalDetails(
                     onDeleteReview = onDeleteReview,
                     onUpdateReview = onUpdateReview
                 ) }
-
+        }
+        if (showCartConfirmation) {
+            CartAddedPopup(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                onDismiss = { showCartConfirmation = false }
+            )
         }
     }
 
@@ -365,6 +366,50 @@ fun ShowRecipeProposalDetails(
                 }
             }
         )
+    }
+}
+
+@Composable
+private fun CartAddedPopup(
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    LaunchedEffect(Unit) {
+        delay(2500)
+        onDismiss()
+    }
+
+    ElevatedCard(
+        modifier = modifier
+            .padding(12.dp)
+            .fillMaxWidth(),
+        onClick = onDismiss
+    ) {
+        Row(
+            modifier = Modifier.padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.ShoppingCart,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary
+            )
+            Spacer(Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = "Added to groceries",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Your ingredients were added to your groceries list",
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 12.sp,
+                    color = Color.DarkGray
+                )
+            }
+        }
     }
 }
 
@@ -538,7 +583,12 @@ private fun CreateNewButton(onClick: () -> Unit) {
 
 
 @Composable
-fun IngredientRow(ingredient: Ingredient, modifier: Modifier = Modifier) {
+fun IngredientRow(
+    ingredient: Ingredient,
+    selected: Boolean = false,
+    onToggle: () -> Unit = {},
+    modifier: Modifier = Modifier
+) {
     val qtyStr = if (ingredient.quantity % 1 == 0.0)
         ingredient.quantity.toInt().toString()
     else "%.1f".format(ingredient.quantity)
@@ -548,13 +598,14 @@ fun IngredientRow(ingredient: Ingredient, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .clickable { onToggle() }
             .padding(top = 14.dp, start = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
-            imageVector        = Icons.Default.CheckBoxOutlineBlank,
+            imageVector        = if (selected) Icons.Default.CheckBox else Icons.Default.CheckBoxOutlineBlank,
             contentDescription = null,
-            tint               = MaterialTheme.colorScheme.outline,
+            tint               = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.inverseOnSurface,
             modifier           = Modifier.size(18.dp)
         )
         Spacer(Modifier.width(12.dp))
