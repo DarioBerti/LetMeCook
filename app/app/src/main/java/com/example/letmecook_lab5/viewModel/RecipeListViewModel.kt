@@ -11,6 +11,7 @@ import com.example.letmecook_lab5.model.Recipe
 import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.repository.TagProvider
 import com.example.letmecook_lab5.LetMeCookApplication
+import com.example.letmecook_lab5.R
 import com.example.letmecook_lab5.domain.IngredientRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,7 +39,8 @@ data class RecipeListUiState(
 
 class RecipeListViewModel(
     private val recipeRepository: RecipeRepository,
-    private val ingredientRepository : IngredientRepository
+    private val ingredientRepository : IngredientRepository,
+    private val tags: List<String>
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(RecipeListUiState())
@@ -79,7 +81,7 @@ class RecipeListViewModel(
                             isLoading = false,
                             ingredients = ingredientRepository.getAllIngredients()
                                 .map { it.name },
-                            tags = TagProvider.allTags
+                            tags = tags
                         )
                     }
                 }
@@ -130,7 +132,10 @@ class RecipeListViewModel(
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
                 val ingredientRepository = application.container.ingredientRepository
-                RecipeListViewModel(recipeRepository = recipeRepository, ingredientRepository = ingredientRepository)
+                val tags = application.resources
+                    .getStringArray(R.array.recipe_tags)
+                    .toList()
+                RecipeListViewModel(recipeRepository = recipeRepository, ingredientRepository = ingredientRepository, tags = tags)
             }
         }
     }

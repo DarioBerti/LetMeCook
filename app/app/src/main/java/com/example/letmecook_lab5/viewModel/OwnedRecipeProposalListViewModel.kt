@@ -21,6 +21,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.letmecook_lab5.LetMeCookApplication
+import com.example.letmecook_lab5.R
 import com.example.letmecook_lab5.domain.IngredientRepository
 
 data class OwnedRecipeListUiState(
@@ -38,7 +39,8 @@ data class OwnedRecipeListUiState(
 
 class OwnedRecipeProposalListViewModel(
     private val recipeRepository: RecipeRepository,
-    private val ingredientRepository : IngredientRepository
+    private val ingredientRepository : IngredientRepository,
+    private val tags: List<String>
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(OwnedRecipeListUiState())
@@ -79,7 +81,7 @@ class OwnedRecipeProposalListViewModel(
                             isLoading = false,
                             ingredients = ingredientRepository.getAllIngredients()
                                 .map { it.name },
-                            tags = TagProvider.allTags
+                            tags = tags
                         )
                     }
                 }
@@ -131,7 +133,10 @@ class OwnedRecipeProposalListViewModel(
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
                 val ingredientRepository = application.container.ingredientRepository
-                OwnedRecipeProposalListViewModel(recipeRepository = recipeRepository, ingredientRepository= ingredientRepository)
+                val tags = application.resources
+                    .getStringArray(R.array.recipe_tags)
+                    .toList()
+                OwnedRecipeProposalListViewModel(recipeRepository = recipeRepository, ingredientRepository= ingredientRepository, tags = tags)
             }
         }
     }

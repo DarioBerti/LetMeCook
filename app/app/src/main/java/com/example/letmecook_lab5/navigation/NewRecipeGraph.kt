@@ -3,6 +3,7 @@ package com.example.letmecook_lab5.navigation
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraphBuilder
@@ -72,12 +73,17 @@ fun NavGraphBuilder.newRecipeGraph(
             )
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
+            val context = LocalContext.current
+            val availableTags = remember {
+                TagProvider.getAllTags(context)
+            }
+
             RecapScreen(
                 title = uiState.title,
                 imageUrl = uiState.imageUrl,
                 errorMessage = uiState.errorMessage,
                 tags = uiState.tags,
-                availableTags = TagProvider.allTags,
+                availableTags = availableTags,
                 onPublish = {
                     if (uiState.editingRecipeId != null) viewModel.updateRecipe()
                     else viewModel.saveRecipe()

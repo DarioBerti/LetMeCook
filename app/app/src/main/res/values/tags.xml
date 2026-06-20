@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="recipe_tags">
+        <item>american</item>
+        <item>appetizer</item>
+        <item>baking</item>
+        <item>beef</item>
+        <item>breakfast</item>
+        <item>luxury</item>
+        <item>pasta</item>
+        <item>pizza</item>
+        <item>PROVA</item>
+        <item>quick</item>
+        <item>raw</item>
+        <item>vegetarian</item>
+    </string-array>
+</resources>
