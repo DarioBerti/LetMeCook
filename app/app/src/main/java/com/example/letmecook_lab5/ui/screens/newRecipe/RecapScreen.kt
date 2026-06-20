@@ -178,7 +178,9 @@ fun RecapScreen(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                availableTags.forEach { tag ->
+                availableTags
+                    .filter { it !in tags }
+                    .forEach { tag ->
                     DropdownMenuItem(
                         text = { Text("#$tag", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.scrim) },
                         onClick = {
