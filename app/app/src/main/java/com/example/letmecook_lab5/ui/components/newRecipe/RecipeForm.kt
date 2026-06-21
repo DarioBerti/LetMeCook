@@ -61,7 +61,7 @@ fun RecipeForm(
 
     val filteredIngredients = availableIngredients.filter { available ->    // avoiding showing ingredients that are already selected
         ingredients.none { it.name == available.name }
-    }
+    }.sortedBy { it.name }
 
     if (showIngredientDialog) {
         AddIngredientDialog(

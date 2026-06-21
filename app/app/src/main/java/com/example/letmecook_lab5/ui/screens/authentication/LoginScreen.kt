@@ -36,8 +36,8 @@ fun LoginScreen(
         ) {
 
             Text(
-                text = "Login Screen",
-                style = MaterialTheme.typography.headlineMedium
+                text = "LetMeCook",
+                style = MaterialTheme.typography.headlineLarge
             )
 
             Spacer(modifier = Modifier.height(24.dp))
