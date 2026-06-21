@@ -326,13 +326,3 @@ fun IngredientsByRecipe(
     }
 }
 
-
-@Composable
-fun GroceriesPlaceholder() {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ){
-        Text("Log in to see your groceries!", modifier = Modifier.align(Alignment.CenterHorizontally))
-    }
-}
-

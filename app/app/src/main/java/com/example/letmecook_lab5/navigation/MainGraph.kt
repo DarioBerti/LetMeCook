@@ -23,7 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.ui.components.common.CommunityNotAvailable
-import com.example.letmecook_lab5.ui.screens.groceries.GroceriesPlaceholder
+import com.example.letmecook_lab5.ui.components.common.GroceriesNotAvailable
 import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
 import com.example.letmecook_lab5.ui.screens.profile.UserListScreen
 import com.example.letmecook_lab5.ui.screens.publishedRecipes.OwnedRecipeProposalList
@@ -133,7 +133,7 @@ fun NavGraphBuilder.mainGraph(
             val currentUserId = firebaseUser?.uid
 
             if (!isLogged){
-                GroceriesPlaceholder()
+                GroceriesNotAvailable()
             }
             else if (currentUserId != null) {
                 GroceriesScreen(
