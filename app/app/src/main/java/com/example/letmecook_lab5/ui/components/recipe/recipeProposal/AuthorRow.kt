@@ -77,15 +77,5 @@ fun AuthorRow(
                 modifier   = Modifier.padding(start = 10.dp)
             )
         }
-        /*
-        Box(
-            modifier = Modifier
-                .height(25.dp)
-                .background(primary, RoundedCornerShape(8.dp))
-                .padding(horizontal = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(text = "Follow", fontSize = 12.sp, color = MaterialTheme.colorScheme.onPrimary)
-        }*/
     }
 }

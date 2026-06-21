@@ -130,19 +130,6 @@ fun GroceriesScreen(
                 Spacer(modifier = Modifier.height(8.dp))
             }
         }
-/*
-        Row(
-            modifier = Modifier.fillMaxWidth()
-        ){
-            if (groceriesByRecipes.flatMap { it.ingredients }.isNotEmpty()){
-                Text("${(groceriesByRecipes.flatMap { it.ingredients }.count { it.isChecked }.toFloat() / groceriesByRecipes.flatMap { it.ingredients }.size.toFloat() * 100).toInt()} % Items Collected")
-            }
-            else {
-                Text("No items")
-            }
-
-        }
- */
     }
 }
 
@@ -192,16 +179,6 @@ fun IngredientCart(
             }
 
             Spacer(modifier = Modifier.width(8.dp))
-/*
-            AsyncImage(
-                model = ingredient.imageUrl,
-                contentDescription = "Ingredient Image",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape)
-            )
-*/
         }
     }
 }

@@ -291,46 +291,6 @@ fun NavGraphBuilder.mainGraph(
                 onFollowersClick = { userId -> MainActions(navController).goFollowers(userId) },
                 onFollowingClick = { userId -> MainActions(navController).goFollowing(userId) }
             )
-
-            /*val firebaseUser by SessionManagerFacade
-                .currentUser
-                .collectAsStateWithLifecycle()
-
-            Log.d("AUTH_UID", SessionManagerFacade.currentUser.value?.uid ?: "NULL")
-
-            val userId = firebaseUser?.uid
-
-            if (userId != null) {
-
-                val viewModel: ProfileViewModel = viewModel(
-                    factory = ProfileViewModel.Factory
-                )
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-                ProfileScreen(
-                    uiState = uiState,
-                    onEditClick = viewModel::startEditing,
-                    onDoneClick = viewModel::save,
-                    onCancelEdit = viewModel::cancelEditing,
-                    onNameChange = viewModel::setName,
-                    onNicknameChange = viewModel::setNickname,
-                    onEmailChange = viewModel::setEmail,
-                    onOpenCamera = viewModel::openCamera,
-                    onTakePhoto = viewModel::onImageCaptured,
-                    onRemovePhoto = viewModel::removePhoto,
-                    onAddDietary = viewModel::addDietaryPreference,
-                    onRemoveDietary = viewModel::removeDietaryPreference,
-                    onAddCuisine = viewModel::addTypeOfCuisine,
-                    onRemoveCuisine = viewModel::removeTypeOfCuisine,
-                    onAddIngredient = viewModel::addFavoriteIngredient,
-                    onRemoveIngredient = viewModel::removeFavoriteIngredient,
-                    onSavedClick = { MainActions(navController).goSaved() },
-                    onCookedClick = { MainActions(navController).goCooked() },
-                    onPublishedClick = { MainActions(navController).goPublished() },
-                    onBack = { MainActions(navController).goBack() } ,
-                    onLogoutClick = { SessionManagerFacade.signOut()}
-                )
-            }*/
         }
 
         composable<PublishedRecipesRoute> {
