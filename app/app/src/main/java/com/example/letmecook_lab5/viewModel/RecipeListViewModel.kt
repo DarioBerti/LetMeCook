@@ -12,13 +12,16 @@ import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.repository.TagProvider
 import com.example.letmecook_lab5.LetMeCookApplication
 import com.example.letmecook_lab5.R
+import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.domain.IngredientRepository
+import com.example.letmecook_lab5.domain.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -40,6 +43,7 @@ data class RecipeListUiState(
 class RecipeListViewModel(
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository : IngredientRepository,
+    private val userRepository: UserRepository,
     private val tags: List<String>
 ) : ViewModel() {
 
@@ -67,6 +71,12 @@ class RecipeListViewModel(
 
     init {
         viewModelScope.launch {
+            val currentUser = userRepository
+                .getUserById(SessionManagerFacade.currentUser.value?.uid.orEmpty()).first()
+            val defaultTags = currentUser?.dietaryPreferences
+                ?.map { it.lowercase() }
+                ?.toSet()
+                ?: emptySet()
             recipeRepository.getAllRecipes().collect { recipes ->
                 if (recipes.isNotEmpty()) {
                     val min = recipes.minOfOrNull { it.cost } ?: 0.0
@@ -81,7 +91,8 @@ class RecipeListViewModel(
                             isLoading = false,
                             ingredients = ingredientRepository.getAllIngredients()
                                 .map { it.name },
-                            tags = tags
+                            tags = tags,
+                            inputSelectedTags = defaultTags
                         )
                     }
                 }
@@ -132,10 +143,11 @@ class RecipeListViewModel(
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
                 val ingredientRepository = application.container.ingredientRepository
+                val userRepository = application.container.userRepository
                 val tags = application.resources
                     .getStringArray(R.array.recipe_tags)
                     .toList()
-                RecipeListViewModel(recipeRepository = recipeRepository, ingredientRepository = ingredientRepository, tags = tags)
+                RecipeListViewModel(recipeRepository = recipeRepository, ingredientRepository = ingredientRepository, userRepository = userRepository, tags = tags)
             }
         }
     }

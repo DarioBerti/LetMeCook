@@ -331,7 +331,7 @@ fun IngredientsByRecipe(
                             textDecoration = if (ingredient.isChecked) TextDecoration.LineThrough else null,
                         )
                         Text(
-                            text = "${ingredient.quantity} ${ingredient.unit}",
+                            text = "%.1f %s".format(ingredient.quantity, ingredient.unit),
                             fontSize = 16.sp,
                             color = Color.Black,
                             textAlign = TextAlign.End

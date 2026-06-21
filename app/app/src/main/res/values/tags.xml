@@ -6,11 +6,17 @@
         <item>baking</item>
         <item>beef</item>
         <item>breakfast</item>
+        <item>carnivore</item>
+        <item>gluten-free</item>
+        <item>halal</item>
         <item>luxury</item>
         <item>pasta</item>
+        <item>pescatarian</item>
         <item>pizza</item>
         <item>quick</item>
         <item>raw</item>
+        <item>seasonal</item>
+        <item>vegan</item>
         <item>vegetarian</item>
     </string-array>
 </resources>
