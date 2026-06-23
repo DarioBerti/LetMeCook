@@ -1,9 +1,6 @@
 package com.example.letmecook_lab5.navigation
 
 import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -16,14 +13,14 @@ import com.example.letmecook_lab5.ui.screens.notifications.NotificationsScreen
 import com.example.letmecook_lab5.ui.screens.profile.ProfileScreen
 import com.example.letmecook_lab5.ui.screens.recipeList.RecipeReviewsScreen
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.ui.components.common.CommunityNotAvailable
 import com.example.letmecook_lab5.ui.components.common.GroceriesNotAvailable
+import com.example.letmecook_lab5.ui.screens.home.FastRecipesScreen
+import com.example.letmecook_lab5.ui.screens.home.NewRecipesScreen
 import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
 import com.example.letmecook_lab5.ui.screens.profile.UserListScreen
 import com.example.letmecook_lab5.ui.screens.publishedRecipes.OwnedRecipeProposalList
@@ -34,9 +31,11 @@ import com.example.letmecook_lab5.viewModel.ReviewViewModel
 import com.example.letmecook_lab5.ui.screens.savedRecipes.SavedRecipesRoute as SavedRecipesScreenRoute
 import com.example.letmecook_lab5.ui.screens.savedRecipes.CollectionDetailsRoute
 import com.example.letmecook_lab5.viewModel.CommunityViewModel
+import com.example.letmecook_lab5.viewModel.FastRecipesViewModel
 import com.example.letmecook_lab5.viewModel.GroceriesViewModel
 import com.example.letmecook_lab5.viewModel.ProfileViewModel
 import com.example.letmecook_lab5.viewModel.HomeScreenViewModel
+import com.example.letmecook_lab5.viewModel.NewRecipesViewModel
 import com.example.letmecook_lab5.viewModel.NotificationViewModel
 import com.example.letmecook_lab5.viewModel.OwnedRecipeProposalListViewModel
 import com.example.letmecook_lab5.viewModel.RecipeListViewModel
@@ -92,6 +91,40 @@ fun NavGraphBuilder.mainGraph(
                 onTagDeselected = viewModel::removeTagFilter,
                 onMaxCostUpdate = viewModel::updateInputMaxCost,
                 onMinCostUpdate = viewModel::updateInputMinCost,
+                onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
+                isLogged = isLogged
+            )
+        }
+
+        composable<NewRecipesRoute> {
+            val viewModel : NewRecipesViewModel = viewModel( factory = NewRecipesViewModel.Factory)
+            val recipes by viewModel.newRecipes.collectAsStateWithLifecycle()
+
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+
+            NewRecipesScreen(
+                recipes = recipes,
+                onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
+                isLogged = isLogged
+            )
+        }
+
+        composable<FastRecipesRoute> {
+            val viewModel : FastRecipesViewModel = viewModel( factory = FastRecipesViewModel.Factory)
+            val recipes by viewModel.fastRecipes.collectAsStateWithLifecycle()
+
+            val firebaseUser by SessionManagerFacade
+                .currentUser
+                .collectAsStateWithLifecycle()
+
+            val isLogged = firebaseUser?.isAnonymous == false
+
+            FastRecipesScreen(
+                recipes = recipes,
                 onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
                 isLogged = isLogged
             )

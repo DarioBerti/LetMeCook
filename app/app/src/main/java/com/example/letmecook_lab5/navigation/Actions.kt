@@ -5,11 +5,20 @@ import androidx.navigation.NavHostController
 class MainActions(
     private val navController: NavHostController
 ) {
-
     val goHome = {
         navController.navigate(HomeRoute) {
             launchSingleTop = true
             popUpTo(navController.graph.startDestinationId)
+        }
+    }
+    val goNewRecipes = {
+        navController.navigate(NewRecipesRoute){
+            launchSingleTop = true
+        }
+    }
+    val goFastRecipes = {
+        navController.navigate(FastRecipesRoute){
+            launchSingleTop = true
         }
     }
 

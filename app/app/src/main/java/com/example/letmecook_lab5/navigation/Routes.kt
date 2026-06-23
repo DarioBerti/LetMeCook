@@ -2,6 +2,8 @@ package com.example.letmecook_lab5.navigation
 
 import kotlinx.serialization.Serializable
 
+@Serializable object NewRecipesRoute
+@Serializable object FastRecipesRoute
 @Serializable object NewRecipeRecapRoute
 @Serializable object HomeRoute
 @Serializable object SearchRoute

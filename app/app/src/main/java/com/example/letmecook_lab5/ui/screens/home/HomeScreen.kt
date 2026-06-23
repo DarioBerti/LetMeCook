@@ -99,6 +99,7 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(end = 16.dp, top = 4.dp).align(Alignment.CenterVertically)
+                    .clickable { actions.goNewRecipes() }
             )
 
         }
@@ -124,7 +125,7 @@ fun HomeScreen(
 
         Row( modifier = Modifier.fillMaxWidth()) {
             Text(
-                text = "Quick Recipes",
+                text = "Fast Recipes",
                 style = MaterialTheme.typography.titleLarge,
                 color = Color.Black,
                 fontWeight = FontWeight.Bold,
@@ -139,6 +140,7 @@ fun HomeScreen(
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(end = 16.dp, top = 4.dp).align(Alignment.CenterVertically)
+                    .clickable(onClick = actions.goFastRecipes)
             )
 
         }

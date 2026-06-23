@@ -59,6 +59,7 @@ import com.example.letmecook_lab5.navigation.AppBottomBar
 import com.example.letmecook_lab5.navigation.AuthGraph
 import com.example.letmecook_lab5.navigation.CommunityRoute
 import com.example.letmecook_lab5.navigation.CookedRecipesRoute
+import com.example.letmecook_lab5.navigation.FastRecipesRoute
 import com.example.letmecook_lab5.navigation.FollowersRoute
 import com.example.letmecook_lab5.navigation.FollowingRoute
 import com.example.letmecook_lab5.navigation.GroceriesRoute
@@ -68,6 +69,7 @@ import com.example.letmecook_lab5.navigation.MainActions
 import com.example.letmecook_lab5.navigation.MainGraph
 import com.example.letmecook_lab5.navigation.NewRecipeRecapRoute
 import com.example.letmecook_lab5.navigation.NewRecipeRoute
+import com.example.letmecook_lab5.navigation.NewRecipesRoute
 import com.example.letmecook_lab5.navigation.NotificationsRoute
 import com.example.letmecook_lab5.navigation.ProfileRoute
 import com.example.letmecook_lab5.navigation.PublishedRecipesRoute
@@ -201,6 +203,12 @@ fun MainScaffold(
 
         currentDestination?.hasRoute(FollowingRoute::class) == true ->
             TopBarConfig(title = "Following", showBack = true)
+
+        currentDestination?.hasRoute(NewRecipesRoute::class) == true ->
+            TopBarConfig(title = "New Recipes", showBack = true)
+
+        currentDestination?.hasRoute(FastRecipesRoute::class) == true ->
+            TopBarConfig(title = "Fast Recipes", showBack = true)
 
         else -> null
     }
