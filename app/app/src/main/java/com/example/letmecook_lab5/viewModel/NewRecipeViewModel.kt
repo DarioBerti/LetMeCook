@@ -13,7 +13,6 @@ import com.example.letmecook_lab5.model.Recipe
 import com.example.letmecook_lab5.model.calculateCost
 import com.example.letmecook_lab5.model.toRecipe
 import com.example.letmecook_lab5.domain.RecipeRepository
-import com.example.letmecook_lab5.session.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

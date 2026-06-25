@@ -10,7 +10,6 @@ import com.example.letmecook_lab5.LetMeCookApplication
 import com.example.letmecook_lab5.model.Collection
 import com.example.letmecook_lab5.model.Recipe
 import com.example.letmecook_lab5.domain.RecipeRepository
-import com.example.letmecook_lab5.session.SessionManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

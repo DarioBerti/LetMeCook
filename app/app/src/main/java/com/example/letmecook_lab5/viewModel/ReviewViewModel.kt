@@ -24,7 +24,6 @@ import com.example.letmecook_lab5.domain.UserRepository
 import com.example.letmecook_lab5.model.Notification
 import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.navigation.RecipeReviewsRoute
-import com.example.letmecook_lab5.session.SessionManager
 import kotlinx.coroutines.flow.first
 import com.example.letmecook_lab5.repository.FirebaseStorageRepository
 import java.util.UUID

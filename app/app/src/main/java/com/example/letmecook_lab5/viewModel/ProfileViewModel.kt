@@ -20,7 +20,6 @@ import com.example.letmecook_lab5.domain.NotificationRepository
 import com.example.letmecook_lab5.model.Notification
 import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.repository.FirebaseStorageRepository
-import com.example.letmecook_lab5.session.SessionManager
 
 class ProfileViewModel(
     private val userRepository: UserRepository,

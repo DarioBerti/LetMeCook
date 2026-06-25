@@ -47,8 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import coil.compose.AsyncImage
+import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.Review
-import com.example.letmecook_lab5.session.SessionManager
 import com.example.letmecook_lab5.ui.components.recipe.photos.CommunityPhotoDialog
 
 @Composable
@@ -118,7 +118,9 @@ fun ReviewItem(
             ) {
                 StarRating(rating = review.rating)
 
-                if (review.authorId == SessionManager.CURRENT_LOGGED_IN_USER_ID) {
+                val currentUser = SessionManagerFacade.currentUser.value?.uid ?: "101"
+
+                if (review.authorId == currentUser) {
                     Box {
                         IconButton( onClick = { showMenu = true } ) {
                             Icon(
@@ -217,29 +219,26 @@ fun ReviewItem(
                 }
             }
         }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text =
-                    if (expanded)
-                        "Hide tips"
-                    else
-                        "View tips",
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-            )
-            IconButton( onClick = { expanded = !expanded } ) {
-                Icon(
-                    imageVector =
-                        if (expanded)
-                            Icons.Filled.KeyboardArrowUp
-                        else
-                            Icons.Filled.KeyboardArrowDown,
-                    contentDescription = null
+        val hasTips = review.doTips.isNotEmpty() || review.dontTips.isNotEmpty()
+        if (hasTips) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = if (expanded) "Hide tips" else "View tips",
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
                 )
+                IconButton(onClick = { expanded = !expanded }) {
+                    Icon(
+                        imageVector =
+                            if (expanded) Icons.Filled.KeyboardArrowUp
+                            else Icons.Filled.KeyboardArrowDown,
+                        contentDescription = null
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(6.dp))
@@ -287,7 +286,7 @@ fun ReviewItem(
                     onDismiss = { showReviewSheet = false },
                     onPublish = onUpdate,
                     recipeId = review.recipeId,
-                    userId = SessionManager.CURRENT_LOGGED_IN_USER_ID
+                    userId = SessionManagerFacade.currentUser.value?.uid ?: "101"
                 )
             }
         }
