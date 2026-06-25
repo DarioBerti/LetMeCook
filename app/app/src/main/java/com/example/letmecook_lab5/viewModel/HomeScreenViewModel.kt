@@ -10,13 +10,18 @@ import com.example.letmecook_lab5.model.Recipe
 import com.example.letmecook_lab5.domain.RecipeRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import com.example.letmecook_lab5.auth.SessionManagerFacade
 import kotlinx.coroutines.flow.stateIn
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import com.example.letmecook_lab5.domain.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.launch
 
 
 class HomeScreenViewModel(
-    private val recipeRepository: RecipeRepository
+    private val recipeRepository: RecipeRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     val topTen : StateFlow<List<Recipe>> = recipeRepository.getTopTenRecipes()
@@ -40,12 +45,32 @@ class HomeScreenViewModel(
             initialValue = emptyList()
         )
 
+    val collections = if (SessionManagerFacade.currentUser.value?.isAnonymous == false) {
+        userRepository.getCollectionsByOwner(SessionManagerFacade.currentUser.value?.uid.orEmpty())
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+    } else {
+        MutableStateFlow(emptyList())
+    }
+
+    fun saveToCollections(recipeId: String, collectionIds: List<String>) {
+        viewModelScope.launch {
+            userRepository.saveRecipeToCollections(SessionManagerFacade.currentUser.value?.uid.orEmpty(), recipeId, collectionIds)
+        }
+    }
+
     companion object {
         val Factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
-                HomeScreenViewModel(recipeRepository = recipeRepository)
+                val userRepository = application.container.userRepository
+                HomeScreenViewModel(
+                    userRepository = userRepository,
+                    recipeRepository = recipeRepository)
             }
         }
     }

@@ -19,9 +19,9 @@ import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.model.NotificationType
 import com.example.letmecook_lab5.ui.components.common.CommunityNotAvailable
 import com.example.letmecook_lab5.ui.components.common.GroceriesNotAvailable
+import com.example.letmecook_lab5.ui.screens.cookedRecipes.CookedRecipeProposalList
 import com.example.letmecook_lab5.ui.screens.home.FastRecipesScreen
 import com.example.letmecook_lab5.ui.screens.home.NewRecipesScreen
-import com.example.letmecook_lab5.ui.screens.profile.CookedRecipesScreen
 import com.example.letmecook_lab5.ui.screens.profile.UserListScreen
 import com.example.letmecook_lab5.ui.screens.publishedRecipes.OwnedRecipeProposalList
 import com.example.letmecook_lab5.ui.screens.recipeList.RecipePhotosScreen
@@ -31,6 +31,7 @@ import com.example.letmecook_lab5.viewModel.ReviewViewModel
 import com.example.letmecook_lab5.ui.screens.savedRecipes.SavedRecipesRoute as SavedRecipesScreenRoute
 import com.example.letmecook_lab5.ui.screens.savedRecipes.CollectionDetailsRoute
 import com.example.letmecook_lab5.viewModel.CommunityViewModel
+import com.example.letmecook_lab5.viewModel.CookedRecipeProposalListViewModel
 import com.example.letmecook_lab5.viewModel.FastRecipesViewModel
 import com.example.letmecook_lab5.viewModel.GroceriesViewModel
 import com.example.letmecook_lab5.viewModel.ProfileViewModel
@@ -54,6 +55,7 @@ fun NavGraphBuilder.mainGraph(
             val topTen by viewModel.topTen.collectAsStateWithLifecycle()
             val newRecipes by viewModel.newRecipes.collectAsStateWithLifecycle()
             val fastRecipes by viewModel.fastRecipes.collectAsStateWithLifecycle()
+            val collections by viewModel.collections.collectAsStateWithLifecycle()
 
             val firebaseUser by SessionManagerFacade
                 .currentUser
@@ -61,11 +63,14 @@ fun NavGraphBuilder.mainGraph(
 
             val isLogged = firebaseUser?.isAnonymous == false
 
-            HomeScreen(actions = MainActions(navController),
+            HomeScreen(
+                actions = MainActions(navController),
                 topTen = topTen,
                 newRecipes = newRecipes,
                 fastRecipes = fastRecipes,
-                isLogged = isLogged
+                isLogged = isLogged,
+                collections = collections,
+                onSaveToCollections = viewModel::saveToCollections
             )
         }
 
@@ -74,6 +79,7 @@ fun NavGraphBuilder.mainGraph(
 
             val uiState by viewModel.uiState.collectAsStateWithLifecycle()
             val recipes by viewModel.filteredRecipes.collectAsStateWithLifecycle()
+            val collections by viewModel.collections.collectAsStateWithLifecycle()
 
             val firebaseUser by SessionManagerFacade
                 .currentUser
@@ -84,6 +90,7 @@ fun NavGraphBuilder.mainGraph(
             SearchScreen(
                 uiState = uiState,
                 recipes = recipes,
+                collections = collections,
                 onTitleChanged = viewModel::updateInputTitle,
                 onIngredientSelected = viewModel::addIngredientFilter,
                 onIngredientDeselected = viewModel::removeIngredientFilter,
@@ -92,13 +99,15 @@ fun NavGraphBuilder.mainGraph(
                 onMaxCostUpdate = viewModel::updateInputMaxCost,
                 onMinCostUpdate = viewModel::updateInputMinCost,
                 onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
-                isLogged = isLogged
+                isLogged = isLogged,
+                onSaveToCollections = viewModel::saveToCollections
             )
         }
 
         composable<NewRecipesRoute> {
             val viewModel : NewRecipesViewModel = viewModel( factory = NewRecipesViewModel.Factory)
             val recipes by viewModel.newRecipes.collectAsStateWithLifecycle()
+            val collections by viewModel.collections.collectAsStateWithLifecycle()
 
             val firebaseUser by SessionManagerFacade
                 .currentUser
@@ -109,13 +118,16 @@ fun NavGraphBuilder.mainGraph(
             NewRecipesScreen(
                 recipes = recipes,
                 onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
-                isLogged = isLogged
+                isLogged = isLogged,
+                collections = collections,
+                onSaveToCollections = viewModel::saveToCollections
             )
         }
 
         composable<FastRecipesRoute> {
             val viewModel : FastRecipesViewModel = viewModel( factory = FastRecipesViewModel.Factory)
             val recipes by viewModel.fastRecipes.collectAsStateWithLifecycle()
+            val collections by viewModel.collections.collectAsStateWithLifecycle()
 
             val firebaseUser by SessionManagerFacade
                 .currentUser
@@ -126,7 +138,9 @@ fun NavGraphBuilder.mainGraph(
             FastRecipesScreen(
                 recipes = recipes,
                 onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) },
-                isLogged = isLogged
+                isLogged = isLogged,
+                onSaveToCollections = viewModel::saveToCollections,
+                collections = collections
             )
         }
 
@@ -348,10 +362,27 @@ fun NavGraphBuilder.mainGraph(
             )
         }
 
-
         composable<CookedRecipesRoute> {
-            CookedRecipesScreen()
+            val viewModel : CookedRecipeProposalListViewModel = viewModel(
+                factory = CookedRecipeProposalListViewModel.Factory
+            )
+            val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+            val recipes by viewModel.filteredRecipes.collectAsStateWithLifecycle()
+
+            CookedRecipeProposalList (
+                uiState = uiState,
+                recipes = recipes,
+                onTitleChanged = { viewModel.updateInputTitle(it) },
+                onIngredientSelected = { viewModel.addIngredientFilter(it) },
+                onIngredientDeselected = { viewModel.removeIngredientFilter(it) },
+                onTagSelected = { viewModel.addTagFilter(it) },
+                onTagDeselected = { viewModel.removeTagFilter(it) },
+                onMaxCostUpdate = { viewModel.updateInputMaxCost(it) },
+                onMinCostUpdate = { viewModel.updateInputMinCost(it) },
+                onRecipeClick = { recipeId -> MainActions(navController).openRecipe(recipeId) }
+            )
         }
+
 
         composable<FollowersRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<FollowersRoute>()

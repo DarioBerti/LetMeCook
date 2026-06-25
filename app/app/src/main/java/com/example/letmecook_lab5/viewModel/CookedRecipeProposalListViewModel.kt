@@ -1,33 +1,30 @@
 package com.example.letmecook_lab5.viewModel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.letmecook_lab5.model.Recipe
 import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.repository.TagProvider
-import com.example.letmecook_lab5.LetMeCookApplication
-import com.example.letmecook_lab5.R
 import com.example.letmecook_lab5.auth.SessionManagerFacade
-import com.example.letmecook_lab5.domain.IngredientRepository
-import com.example.letmecook_lab5.domain.UserRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.letmecook_lab5.LetMeCookApplication
+import com.example.letmecook_lab5.R
+import com.example.letmecook_lab5.domain.IngredientRepository
 
-data class RecipeListUiState(
+data class CookedRecipeListUiState(
     val isLoading: Boolean = true,
     val inputName: String = "",
     val inputSelectedIngredients: Set<String> = emptySet(),
@@ -40,17 +37,17 @@ data class RecipeListUiState(
     val tags: List<String> = emptyList()
 )
 
-class RecipeListViewModel(
+class CookedRecipeProposalListViewModel(
     private val recipeRepository: RecipeRepository,
     private val ingredientRepository : IngredientRepository,
-    private val userRepository: UserRepository,
     private val tags: List<String>
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(RecipeListUiState())
-    val uiState: StateFlow<RecipeListUiState> = _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(CookedRecipeListUiState())
+    val uiState: StateFlow<CookedRecipeListUiState> = _uiState.asStateFlow()
+    private val _baseRecipes = MutableStateFlow<List<Recipe>>(emptyList())
     val filteredRecipes : StateFlow<List<Recipe>> = combine(
-        recipeRepository.getAllRecipes(),
+        _baseRecipes,
         _uiState
     ){
             recipes, uiState ->
@@ -69,61 +66,40 @@ class RecipeListViewModel(
             initialValue = emptyList()
         )
 
-    val collections = if (SessionManagerFacade.currentUser.value?.isAnonymous == false) {
-        userRepository.getCollectionsByOwner(SessionManagerFacade.currentUser.value?.uid.orEmpty())
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = emptyList()
-            )
-    } else {
-        MutableStateFlow(emptyList())
-    }
-
     init {
         viewModelScope.launch {
-            val currentUser = userRepository
-                .getUserById(SessionManagerFacade.currentUser.value?.uid.orEmpty()).first()
-            val defaultTags = currentUser?.dietaryPreferences
-                ?.map { it.lowercase() }
-                ?.toSet()
-                ?: emptySet()
-            recipeRepository.getAllRecipes().collect { recipes ->
-                if (recipes.isNotEmpty()) {
-                    val min = recipes.minOfOrNull { it.cost } ?: 0.0
-                    val max = recipes.maxOfOrNull { it.cost } ?: Double.MAX_VALUE
+            val recipes = recipeRepository.getRecipesCookedByUser(
+                SessionManagerFacade.currentUser.value?.uid.orEmpty()
+            )
+            _baseRecipes.value = recipes
 
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            totalMinCost = min,
-                            totalMaxCost = max,
-                            inputMaxCost = max,
-                            inputMinCost = min,
-                            isLoading = false,
-                            ingredients = ingredientRepository.getAllIngredients()
-                                .map { it.name },
-                            tags = tags,
-                            inputSelectedTags = defaultTags
-                        )
-                    }
+            val fetchedIngredients = ingredientRepository.getAllIngredients().map { it.name }
+
+            if (recipes.isNotEmpty()) {
+                val min = recipes.minOfOrNull { it.cost } ?: 0.0
+                val max = recipes.maxOfOrNull { it.cost } ?: Double.MAX_VALUE
+
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        totalMinCost = min,
+                        totalMaxCost = max,
+                        inputMaxCost = max,
+                        inputMinCost = min,
+                        isLoading = false,
+                        ingredients = fetchedIngredients,
+                        tags = tags
+                    )
                 }
-                else {
-                    Log.d("RecipeViewModel", "Attenzione: Il Flow ha emesso una lista vuota di ricette!")
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            isLoading = false
-                        )
-                    }
+            } else {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        isLoading = false
+                    )
                 }
             }
         }
     }
 
-    fun saveToCollections(recipeId: String, collectionIds: List<String>) {
-        viewModelScope.launch {
-            userRepository.saveRecipeToCollections(SessionManagerFacade.currentUser.value?.uid.orEmpty(), recipeId, collectionIds)
-        }
-    }
 
 
     fun updateInputTitle(title: String) {
@@ -161,11 +137,10 @@ class RecipeListViewModel(
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
                 val ingredientRepository = application.container.ingredientRepository
-                val userRepository = application.container.userRepository
                 val tags = application.resources
                     .getStringArray(R.array.recipe_tags)
                     .toList()
-                RecipeListViewModel(recipeRepository = recipeRepository, ingredientRepository = ingredientRepository, userRepository = userRepository, tags = tags)
+                CookedRecipeProposalListViewModel(recipeRepository = recipeRepository, ingredientRepository= ingredientRepository, tags = tags)
             }
         }
     }

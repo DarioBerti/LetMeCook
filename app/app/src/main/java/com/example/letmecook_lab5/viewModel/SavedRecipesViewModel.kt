@@ -83,6 +83,12 @@ class SavedRecipesViewModel(
         }
     }
 
+    fun saveToCollections(recipeId: String, collectionIds: List<String>) {
+        viewModelScope.launch {
+            userRepo.saveRecipeToCollections(SessionManagerFacade.currentUser.value?.uid.orEmpty(), recipeId, collectionIds)
+        }
+    }
+
     fun deleteCollection(collectionId: String) {
         viewModelScope.launch {
             userRepo.deleteCollection(userId, collectionId)

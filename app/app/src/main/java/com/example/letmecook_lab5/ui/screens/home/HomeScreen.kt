@@ -27,11 +27,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 
 import androidx.compose.ui.unit.sp
+import com.example.letmecook_lab5.model.Collection
+import com.example.letmecook_lab5.ui.components.common.SaveRecipeDialog
 import com.example.letmecook_lab5.ui.components.recipeList.RecipeCard
 
 
@@ -41,8 +53,21 @@ fun HomeScreen(
     topTen: List<Recipe>,
     newRecipes: List<Recipe>,
     fastRecipes: List<Recipe>,
-    isLogged: Boolean
+    isLogged: Boolean,
+    collections: List<Collection>,
+    onSaveToCollections: (String, List<String>) -> Unit,
 ) {
+    var showSaveDialog by remember { mutableStateOf("") }
+
+    if (showSaveDialog.isNotBlank()) {
+        SaveRecipeDialog(
+            recipeId = showSaveDialog,
+            collections = collections,
+            onSave = onSaveToCollections,
+            onDismiss = { showSaveDialog = "" }
+        )
+    }
+
     Column(
         modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.Start,
@@ -68,9 +93,11 @@ fun HomeScreen(
 
         TopTenRow(
             recipes = topTen,
+            collections = collections,
             onClick = actions.openRecipe,
             modifier = Modifier.width(330.dp).height(330.dp),
-            isLogged = isLogged
+            isLogged = isLogged,
+            toggleSaveDialog = { recipeId -> showSaveDialog = recipeId }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -108,9 +135,11 @@ fun HomeScreen(
 
         RecipesRow(
             recipes = newRecipes,
+            collections = collections,
             onClick = actions.openRecipe,
             modifier = Modifier.width(230.dp).height(160.dp),
-            isLogged = isLogged
+            isLogged = isLogged,
+            toggleSaveDialog = { recipeId -> showSaveDialog = recipeId }
         )
 
         Spacer(modifier = Modifier.height(24.dp))
@@ -149,9 +178,11 @@ fun HomeScreen(
 
         RecipesRow(
             recipes = fastRecipes,
+            collections = collections,
             modifier = Modifier.width(230.dp).height(160.dp),
             onClick = actions.openRecipe,
-            isLogged = isLogged
+            isLogged = isLogged,
+            toggleSaveDialog = { recipeId -> showSaveDialog = recipeId }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -222,7 +253,9 @@ fun TopTenRow(
     recipes: List<Recipe>,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {},
-    isLogged: Boolean
+    isLogged: Boolean,
+    toggleSaveDialog: (String) -> Unit,
+    collections: List<Collection>,
 ) {
     LazyRow() {
         items(recipes) { recipe ->
@@ -230,7 +263,10 @@ fun TopTenRow(
                 recipe = recipe,
                 modifier = modifier,
                 onClick = onClick,
-                isLogged = isLogged
+                isLogged = isLogged,
+                isSaved = collections.any { recipe.id in it.recipeIds },
+                toggleSaveDialog = toggleSaveDialog
+
             )
         }
     }
@@ -240,7 +276,9 @@ fun RecipesRow(
     recipes: List<Recipe>,
     modifier: Modifier = Modifier,
     onClick: (String) -> Unit = {},
-    isLogged: Boolean
+    isLogged: Boolean,
+    toggleSaveDialog: (String) -> Unit,
+    collections: List<Collection>,
 ) {
     LazyRow() {
         items(recipes) { recipe ->
@@ -248,8 +286,12 @@ fun RecipesRow(
                 recipe = recipe,
                 modifier = modifier,
                 onClick = onClick,
-                isLogged = isLogged
+                isLogged = isLogged,
+                isSaved = collections.any { recipe.id in it.recipeIds },
+                toggleSaveDialog = toggleSaveDialog
             )
         }
     }
 }
+
+

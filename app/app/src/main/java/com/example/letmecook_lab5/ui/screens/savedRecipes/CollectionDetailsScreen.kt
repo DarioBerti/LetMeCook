@@ -9,11 +9,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.letmecook_lab5.model.Recipe
+import com.example.letmecook_lab5.ui.components.common.SaveRecipeDialog
 import com.example.letmecook_lab5.ui.components.common.TopAppLetMeCook
 import com.example.letmecook_lab5.ui.components.recipeList.RecipeCard
 import com.example.letmecook_lab5.viewModel.CollectionDetailsViewModel
@@ -28,6 +32,19 @@ fun CollectionDetailsRoute(
     isLogged: Boolean
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val collections by viewModel.collections.collectAsStateWithLifecycle()
+
+    var showSaveDialog by remember { mutableStateOf("") }
+
+    if (showSaveDialog.isNotBlank()) {
+        SaveRecipeDialog(
+            recipeId = showSaveDialog,
+            collections = collections,
+            onSave = viewModel::saveToCollections,
+            onDismiss = { showSaveDialog = "" }
+        )
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         TopAppLetMeCook("Collection details", onClick = onBack)
         uiState.collection?.let { col ->
@@ -37,7 +54,12 @@ fun CollectionDetailsRoute(
 
         Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
             uiState.recipes.forEach { recipe ->
-                RecipeCard(recipe, onClick = { onRecipeClick(recipe) }, isLogged = isLogged)
+                RecipeCard(
+                    recipe, onClick = { onRecipeClick(recipe) },
+                    isLogged = isLogged,
+                    isSaved = collections.any { recipe.id in it.recipeIds },
+                    toggleSaveDialog = { recipeId -> showSaveDialog = recipeId }
+                )
                 Spacer(modifier = Modifier.padding(vertical = 8.dp))
             }
         }

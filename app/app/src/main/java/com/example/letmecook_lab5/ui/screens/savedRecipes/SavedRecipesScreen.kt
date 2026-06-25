@@ -1,6 +1,11 @@
 package com.example.letmecook_lab5.ui.screens.savedRecipes
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -62,18 +67,21 @@ import androidx.compose.material3.TextButton
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import coil.compose.AsyncImage
+import com.example.letmecook_lab5.ui.components.common.SaveRecipeDialog
+import java.io.File
 
 @Composable
 fun SavedRecipesRoute(
     onBack: () -> Unit,
     onCollectionClick: (String) -> Unit,
     onRecipeClick: (Recipe) -> Unit,
-            viewModel: SavedRecipesViewModel = viewModel(
+    viewModel: SavedRecipesViewModel = viewModel(
         factory = SavedRecipesViewModel.Factory
     ),
     isLogged: Boolean
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     SavedRecipesScreen(
         uiState = uiState,
         onBack = onBack,
@@ -82,7 +90,8 @@ fun SavedRecipesRoute(
         onRecipeClick = onRecipeClick,
         onCreateCollection = { name, desc, uri -> viewModel.createCollection(name, desc, uri) },
         onDeleteCollection = viewModel::deleteCollection,
-        isLogged = isLogged
+        isLogged = isLogged,
+        onSaveToCollections = viewModel::saveToCollections
     )
 }
 
@@ -94,10 +103,21 @@ fun SavedRecipesScreen(
     onCollectionClick: (String) -> Unit,
     onRecipeClick: (Recipe) -> Unit,
     onCreateCollection: (String, String, String?) -> Unit,
+    onSaveToCollections: (String, List<String>) -> Unit,
     onDeleteCollection: (String) -> Unit,
     isLogged: Boolean
 ) {
     var showNewCollectionDialog by remember { mutableStateOf(false) }
+    var showSaveDialog by remember { mutableStateOf("") }
+
+    if (showSaveDialog.isNotBlank()) {
+        SaveRecipeDialog(
+            recipeId = showSaveDialog,
+            collections = uiState.collections,
+            onSave = onSaveToCollections ,
+            onDismiss = { showSaveDialog = "" }
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -156,7 +176,12 @@ fun SavedRecipesScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         uiState.savedRecipes.forEach { recipe ->
-                            RecipeCard(recipe, onClick = { onRecipeClick(recipe) }, isLogged = isLogged)
+                            RecipeCard(
+                                recipe, onClick = { onRecipeClick(recipe) },
+                                isLogged = isLogged,
+                                isSaved = uiState.collections.any { recipe.id in it.recipeIds },
+                                toggleSaveDialog = { recipeId -> showSaveDialog = recipeId }
+                            )
                             Spacer(modifier = Modifier.padding(vertical = 8.dp))
                         }
                     }
@@ -319,18 +344,18 @@ private fun NewCollectionDialog(
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     val isValid = name.isNotBlank() && description.isNotBlank()
-    var imageUri by remember { mutableStateOf<android.net.Uri?>(null) }
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
     val galleryLauncher = rememberLauncherForActivityResult(
-        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+        ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == android.app.Activity.RESULT_OK) {
+        if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { pickedUri ->
-                val file = java.io.File(context.cacheDir, "collection_${System.currentTimeMillis()}.jpg")
+                val file = File(context.cacheDir, "collection_${System.currentTimeMillis()}.jpg")
                 context.contentResolver.openInputStream(pickedUri)?.use { input ->
                     file.outputStream().use { input.copyTo(it) }
                 }
-                imageUri = android.net.Uri.fromFile(file)
+                imageUri = Uri.fromFile(file)
             }
         }
     }
@@ -364,9 +389,9 @@ private fun NewCollectionDialog(
                         .clip(RoundedCornerShape(12.dp))
                         .clickable {
                             galleryLauncher.launch(
-                                android.content.Intent(
-                                    android.content.Intent.ACTION_PICK,
-                                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                Intent(
+                                    Intent.ACTION_PICK,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                                 )
                             )
                         }

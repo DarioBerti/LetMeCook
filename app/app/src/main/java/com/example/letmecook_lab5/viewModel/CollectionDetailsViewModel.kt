@@ -23,6 +23,8 @@ import androidx.navigation.toRoute
 import com.example.letmecook_lab5.domain.UserRepository
 import com.example.letmecook_lab5.navigation.CollectionDetailRoute
 import com.example.letmecook_lab5.auth.SessionManagerFacade
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
 
 data class CollectionDetailsUiState(
@@ -39,6 +41,23 @@ class CollectionDetailsViewModel(
 
     private val _uiState = MutableStateFlow(CollectionDetailsUiState())
     val uiState: StateFlow<CollectionDetailsUiState> = _uiState.asStateFlow()
+
+    val collections = if (SessionManagerFacade.currentUser.value?.isAnonymous == false) {
+        userRepository.getCollectionsByOwner(SessionManagerFacade.currentUser.value?.uid.orEmpty())
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+    } else {
+        MutableStateFlow(emptyList())
+    }
+
+    fun saveToCollections(recipeId: String, collectionIds: List<String>) {
+        viewModelScope.launch {
+            userRepository.saveRecipeToCollections(SessionManagerFacade.currentUser.value?.uid.orEmpty(), recipeId, collectionIds)
+        }
+    }
 
     private val collectionRoute = savedStateHandle.toRoute<CollectionDetailRoute>()
     private val collectionId = collectionRoute.collectionId

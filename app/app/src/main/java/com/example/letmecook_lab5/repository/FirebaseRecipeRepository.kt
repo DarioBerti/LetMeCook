@@ -11,6 +11,8 @@ import com.example.letmecook_lab5.model.Step
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.snapshots
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 
@@ -51,6 +53,32 @@ class FirebaseRecipeRepository(
                         recipe.ownerId == ownerId
                     }
             }
+    }
+
+    override suspend fun getRecipesCookedByUser(userId: String): List<Recipe>  {
+        try {
+            val reviewsSnapshot = firestore.collectionGroup("reviews")
+                .whereEqualTo("authorId", userId)
+                .get()
+                .await()
+
+            val recipeIds = reviewsSnapshot.toObjects(Review::class.java).map { it.recipeId }
+
+            if (recipeIds.isEmpty()) {
+                return emptyList()
+            }
+
+            Log.d("Cooked", "Recipes found: $recipeIds")
+            val recipesSnapshot = recipesCollection
+                .whereIn("id", recipeIds)
+                .get()
+                .await()
+
+            return recipesSnapshot.toObjects(Recipe::class.java)
+
+        } catch (e: Exception) {
+            throw e
+        }
     }
 
     override fun getTopTenRecipes(): Flow<List<Recipe>> {

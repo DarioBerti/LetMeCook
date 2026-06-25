@@ -12,10 +12,15 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import com.example.letmecook_lab5.auth.SessionManagerFacade
+import com.example.letmecook_lab5.domain.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 
 class FastRecipesViewModel(
-    private val recipeRepository: RecipeRepository
+    private val recipeRepository: RecipeRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
     val fastRecipes : StateFlow<List<Recipe>> = recipeRepository.getFastRecipes()
         .stateIn(
@@ -24,12 +29,30 @@ class FastRecipesViewModel(
             initialValue = emptyList()
         )
 
+    val collections = if (SessionManagerFacade.currentUser.value?.isAnonymous == false) {
+        userRepository.getCollectionsByOwner(SessionManagerFacade.currentUser.value?.uid.orEmpty())
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
+    } else {
+        MutableStateFlow(emptyList())
+    }
+
+    fun saveToCollections(recipeId: String, collectionIds: List<String>) {
+        viewModelScope.launch {
+            userRepository.saveRecipeToCollections(SessionManagerFacade.currentUser.value?.uid.orEmpty(), recipeId, collectionIds)
+        }
+    }
+
     companion object {
         val Factory : ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as LetMeCookApplication)
                 val recipeRepository = application.container.recipeRepository
-                FastRecipesViewModel(recipeRepository = recipeRepository)
+                val userRepository = application.container.userRepository
+                FastRecipesViewModel(recipeRepository = recipeRepository, userRepository = userRepository)
             }
         }
     }

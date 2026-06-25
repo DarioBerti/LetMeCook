@@ -1,6 +1,7 @@
 package com.example.letmecook_lab5.ui.components.recipeList
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.FlowRow
@@ -11,23 +12,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bookmark
-import androidx.compose.material.icons.outlined.BookmarkBorder
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -106,10 +102,6 @@ fun MyRecipeCard(
                 }
             }
 
-            SavedIconButton(modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(2.dp))
-
             FlowRow(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
@@ -140,8 +132,10 @@ fun MyRecipeCard(
 fun RecipeCard(
     recipe: Recipe,
     onClick: (String) -> Unit,
+    isLogged: Boolean,
+    isSaved: Boolean,
+    toggleSaveDialog: (String) -> Unit,
     modifier: Modifier = Modifier,
-    isLogged: Boolean
 ) {
     Card(
         onClick = { onClick(recipe.id) },
@@ -205,10 +199,14 @@ fun RecipeCard(
                 }
             }
 
-
-            if (isLogged) SavedIconButton(modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(2.dp))
+            if (isLogged)
+                SavedIconButton(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(2.dp),
+                    isSaved  = isSaved,
+                    onSaveClick = { toggleSaveDialog(recipe.id) },
+                )
 
             Row(
                 modifier = Modifier
@@ -268,6 +266,8 @@ fun HomeRecipeCard(
     recipe: Recipe,
     onClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    isSaved: Boolean,
+    toggleSaveDialog: (String) -> Unit,
     isLogged: Boolean
 ) {
     Card(
@@ -320,11 +320,15 @@ fun HomeRecipeCard(
                     )
                 }
             }
+            if (isLogged)
+                SavedIconButton(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(2.dp),
+                    isSaved = isSaved,
+                    onSaveClick = { toggleSaveDialog(recipe.id) },
+                )
 
-
-            if (isLogged) SavedIconButton(modifier = Modifier
-                .align(Alignment.TopEnd)
-                .padding(2.dp))
 
             Row(
                 modifier = Modifier
@@ -355,22 +359,24 @@ fun HomeRecipeCard(
 
 @Composable
 fun SavedIconButton(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isSaved: Boolean,
+    onSaveClick: () -> Unit
 ) {
-    var isToggled by rememberSaveable { mutableStateOf(false) }
 
-    IconButton(
-        onClick = { isToggled = !isToggled },
-        modifier = modifier,
-        colors = IconButtonDefaults.iconButtonColors(
-            containerColor = Color.White
-        )
-    ) {
+    val primary = MaterialTheme.colorScheme.primary
+    val surface = MaterialTheme.colorScheme.surface
+
+    Spacer(Modifier.width(8.dp))
+    Box(modifier = modifier
+        .background(surface, RoundedCornerShape(6.dp))
+        .padding(4.dp)
+        .clickable { onSaveClick() }) {
         Icon(
-            imageVector = if (isToggled) Icons.Filled.Bookmark else Icons.Outlined.BookmarkBorder,
-
-            contentDescription = if (isToggled) "Rimuovi dai salvati" else "Salva ricetta",
-            tint = MaterialTheme.colorScheme.primary
+            imageVector        = if (isSaved) Icons.Default.Bookmark else Icons.Default.BookmarkBorder,
+            contentDescription = "Save recipe",
+            tint               = primary,
+            modifier           = Modifier.size(25.dp)
         )
     }
 }

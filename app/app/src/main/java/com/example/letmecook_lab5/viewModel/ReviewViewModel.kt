@@ -17,6 +17,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.navigation.toRoute
 import com.example.letmecook_lab5.LetMeCookApplication
+import com.example.letmecook_lab5.auth.SessionManagerFacade
 import com.example.letmecook_lab5.domain.NotificationRepository
 import com.example.letmecook_lab5.domain.RecipeRepository
 import com.example.letmecook_lab5.domain.UserRepository
@@ -38,7 +39,7 @@ class ReviewViewModel(
 ) : ViewModel() {
     private val reviewsRoute = savedStateHandle.toRoute<RecipeReviewsRoute>()
     private val recipeId = reviewsRoute.recipeId
-    private val userId = SessionManager.CURRENT_LOGGED_IN_USER_ID
+    private val userId = SessionManagerFacade.currentUser.value?.uid ?: ""
 
 
     val recipeReviews =

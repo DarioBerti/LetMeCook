@@ -1,15 +1,18 @@
-package com.example.letmecook_lab5.ui.screens.search
+package com.example.letmecook_lab5.ui.screens.cookedRecipes
 
+
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -25,23 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
-import com.example.letmecook_lab5.model.Collection
 import com.example.letmecook_lab5.model.Recipe
-import com.example.letmecook_lab5.ui.components.common.SaveRecipeDialog
-import com.example.letmecook_lab5.ui.components.recipeList.FilterMenu
 import com.example.letmecook_lab5.ui.components.recipeList.ModalBottomIngredients
-import com.example.letmecook_lab5.ui.components.recipeList.RecipeCard
-import com.example.letmecook_lab5.ui.components.recipeList.SearchAndFiltersSection
-import com.example.letmecook_lab5.viewModel.RecipeListUiState
-
+import com.example.letmecook_lab5.ui.components.recipeList.*
+import com.example.letmecook_lab5.viewModel.CookedRecipeListUiState
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(
-    uiState: RecipeListUiState,
+fun CookedRecipeProposalList (
+    uiState: CookedRecipeListUiState,
     recipes: List<Recipe>,
-    collections: List<Collection>,
     onTitleChanged: (String) -> Unit,
     onIngredientSelected: (String) -> Unit,
     onIngredientDeselected: (String) -> Unit,
@@ -49,27 +46,15 @@ fun SearchScreen(
     onTagDeselected: (String) -> Unit,
     onMaxCostUpdate: (Double) -> Unit,
     onMinCostUpdate: (Double) -> Unit,
-    onSaveToCollections: (String, List<String>) -> Unit,
     onRecipeClick: (String) -> Unit,
-    isLogged: Boolean
 ){
 
     var isFilterExpanded by remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState( skipPartiallyExpanded = true )
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     val scope = rememberCoroutineScope ()
     var bottomMenu by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    var showSaveDialog by remember { mutableStateOf("") }
-
-    if (showSaveDialog.isNotBlank()) {
-        SaveRecipeDialog(
-            recipeId = showSaveDialog,
-            collections = collections,
-            onSave = onSaveToCollections,
-            onDismiss = { showSaveDialog = "" }
-        )
-    }
 
     Column(
         modifier = Modifier
@@ -83,7 +68,7 @@ fun SearchScreen(
         SearchAndFiltersSection(
             query = uiState.inputName,
             onQueryChanged = onTitleChanged,
-            onTrailingButton = { if (!uiState.isLoading) isFilterExpanded = !isFilterExpanded }
+            onTrailingButton = { if (!uiState.isLoading ) isFilterExpanded = !isFilterExpanded }
         )
 
         AnimatedVisibility(
@@ -102,7 +87,7 @@ fun SearchScreen(
                 onMaxCostUpdate = onMaxCostUpdate,
                 onMinCostUpdate = onMinCostUpdate,
                 tagsSelected = uiState.inputSelectedTags,
-                totalTags = uiState.tags,
+                totalTags = uiState.tags
             )
         }
 
@@ -117,26 +102,21 @@ fun SearchScreen(
                     trackColor = MaterialTheme.colorScheme.surfaceVariant,
                 )
             }
-        }
-        else{
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
-            ) {
+        }else {
 
-                Spacer(modifier = Modifier.padding(vertical = 8.dp))
-
-
-
-                recipes.forEach { recipe ->
-                    RecipeCard(
-                        recipe, onClick = { onRecipeClick(recipe.id) },
-                        isLogged = isLogged,
-                        isSaved = collections.any { recipe.id in it.recipeIds },
-                        toggleSaveDialog = { showSaveDialog = recipe.id },
-                    )
-                    Spacer(modifier = Modifier.padding(vertical = 8.dp))
+            Box() {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp)
+                ) {
+                    items(recipes) { recipe ->
+                        MyRecipeCard(recipe, onClick = { onRecipeClick(recipe.id) })
+                        Log.d("CookedRecipe", recipe.toString())
+                    }
                 }
 
                 if (bottomMenu) {

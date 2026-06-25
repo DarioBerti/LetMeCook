@@ -742,11 +742,6 @@ private fun CommunityPhotosSection(
     photoReviews: List<Review>,
     onViewAllPhotosClick: () -> Unit
 ) {
-    val primary = MaterialTheme.colorScheme.primary
-    val onBackground = MaterialTheme.colorScheme.onBackground
-    val onSurfaceVariant = MaterialTheme.colorScheme.onSurfaceVariant
-    val surfaceVariant = MaterialTheme.colorScheme.surfaceVariant
-
     var selectedPhotoReview by remember { mutableStateOf<Review?>(null) }
 
     if (selectedPhotoReview != null) {
