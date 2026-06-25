@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -96,7 +97,7 @@ fun GroceriesScreen(
                     removeRecipe = onRecipeDelete,
                     onRecipeClick = onRecipeClick
                 )
-                Spacer(modifier = Modifier.padding(vertical = 8.dp))
+                Spacer(modifier = Modifier.padding(vertical = 4.dp))
             }
         else {
             Row(
@@ -127,7 +128,78 @@ fun GroceriesScreen(
                     ingredient = ingredient,
                     toggleIsChecked = toggleIsChecked
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+        }
+        val allIngredients = groceriesByRecipes.flatMap { it.ingredients }
+        val totalItems = allIngredients.size
+
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f), shape = CircleShape)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                if (totalItems > 0) {
+                    val checkedItems = allIngredients.count { it.isChecked }
+                    val percentage = ((checkedItems.toFloat() / totalItems) * 100).toInt()
+                    Text(
+                        text = "$percentage%",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "ITEMS COLLECTED",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                    )
+                } else {
+                    Text(
+                        text = "0%",
+                        fontSize = 32.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                    Text(
+                        text = "ITEMS COLLECTED",
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .background(color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.1f), shape = CircleShape)
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "${groceriesByRecipes.size}",
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = "ACTIVE RECIPES",
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary.copy(alpha = 0.6f)
+                )
             }
         }
     }
@@ -303,12 +375,12 @@ fun IngredientsByRecipe(
                     ) {
                         Text(
                             text = ingredient.name,
-                            fontSize = 18.sp,
-                            color = Color.Black,
+                            fontWeight = FontWeight.Bold,
                             textDecoration = if (ingredient.isChecked) TextDecoration.LineThrough else null,
+                            color = if (ingredient.isChecked) Color.Gray else Color.Black
                         )
                         Text(
-                            text = "%.1f %s".format(ingredient.quantity, ingredient.unit),
+                            text = "${ingredient.quantity} ${ingredient.unit}",
                             fontSize = 16.sp,
                             color = Color.Black,
                             textAlign = TextAlign.End
