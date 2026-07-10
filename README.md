@@ -1,11 +1,11 @@
 <div align="center">
 
-# 🍳 LetMeCook
+# LetMeCook
 
-### *Your next meal, simplified.*
+### A recipe-sharing Android application
 
-A recipe-sharing Android app to discover, create and share culinary ideas —
-save your favorites, build grocery lists, and cook together with the community.
+Discover, create and share recipes — save favorites, build grocery lists,
+and cook together with the community.
 
 ![Kotlin](https://img.shields.io/badge/Kotlin-7F52FF?style=flat&logo=kotlin&logoColor=white)
 ![Jetpack Compose](https://img.shields.io/badge/Jetpack%20Compose-4285F4?style=flat&logo=jetpackcompose&logoColor=white)
@@ -17,13 +17,13 @@ save your favorites, build grocery lists, and cook together with the community.
 
 ---
 
-## 📖 About
+## About
 
-**LetMeCook** helps food lovers of every level — from university students cooking their first pasta to seasoned home chefs — find recipes that fit their taste, budget and dietary needs. Users can publish their own recipes step by step (photos included), remix existing ones, review dishes they've cooked, and keep an organized grocery list generated straight from recipe ingredients.
+LetMeCook helps users find recipes that fit their taste, budget and dietary needs. Users can publish their own recipes step by step (photos included), remix existing ones, review dishes they have cooked, and keep an organized grocery list generated directly from recipe ingredients.
 
 The app was developed as a team project for the **Mobile Applications Development** course (2025/26) at **Politecnico di Torino**.
 
-## 📱 Screenshots
+## Screenshots
 
 <div align="center">
 
@@ -37,21 +37,21 @@ The app was developed as a team project for the **Mobile Applications Developmen
 
 </div>
 
-🎥 Want to see it in action? Check out the [demo video](Letmecook%20Demonstration%20%28compresso%29.mp4).
+A full walkthrough is available in the [demo video](Letmecook%20Demonstration%20%28compresso%29.mp4).
 
-## ✨ Features
+## Features
 
-- **Discover recipes** — trending dishes, freshly added recipes and quick bites, all from the home feed
-- **Smart search** — filter by cost range, ingredients, tags and type of cuisine; your dietary preferences (e.g. *vegetarian*) are applied automatically
+- **Recipe discovery** — trending dishes, freshly added recipes and quick bites, all from the home feed
+- **Advanced search** — filter by cost range, ingredients, tags and type of cuisine; the user's dietary preferences (e.g. *vegetarian*) are applied automatically
 - **Recipe pages** — difficulty, prep time, calories and estimated cost per serving, with step-by-step photo instructions
-- **Create & remix** — publish your own recipes or *"Create New from This"* to extend someone else's dish
-- **Reviews & tips** — mark a recipe as cooked, rate it, share photos and leave DO/DON'T cooking tips
-- **Collections** — save recipes into personal collections like *Weekend cooking* or *Lunch ideas*
+- **Create and remix** — publish original recipes or use *"Create New from This"* to extend an existing dish
+- **Reviews and tips** — mark a recipe as cooked, rate it, share photos and leave DO/DON'T cooking tips
+- **Collections** — save recipes into personal collections such as *Weekend cooking* or *Lunch ideas*
 - **Grocery list** — add ingredients from any recipe (scaled by servings), then check items off while shopping
-- **Community** — follow other cooks and see what they publish and cook, or browse what's popular
+- **Community** — follow other cooks and see what they publish and cook, or browse popular content
 - **Authentication** — sign in with Google, or browse as a guest with read-only access
 
-## 🛠️ Tech Stack
+## Tech stack
 
 | Layer | Technology |
 |---|---|
@@ -62,10 +62,10 @@ The app was developed as a team project for the **Mobile Applications Developmen
 | Backend | [Firebase](https://firebase.google.com/) — Firestore, Authentication, Cloud Storage |
 | Sign-in | Google Identity / Credential Manager |
 | Images | [Coil](https://coil-kt.github.io/coil/) |
-| Camera | CameraX (recipe & review photos) |
+| Camera | CameraX (recipe and review photos) |
 | Local storage | PaperDB |
 
-## 🚀 Getting Started
+## Getting started
 
 ### Prerequisites
 
@@ -81,13 +81,13 @@ git clone <this-repo-url>
 
 1. Open the `app/` folder in Android Studio
 2. Let Gradle sync (the Firebase configuration `google-services.json` is already included)
-3. Hit **Run** ▶️
+3. Run the app on a device or emulator
 
-### Or just install the APK
+### Install the prebuilt APK
 
-A prebuilt release is available at the repo root: [`app-release.apk`](app-release.apk)
+A prebuilt release is available at the repository root: [`app-release.apk`](app-release.apk)
 
-## 📂 Repository Structure
+## Repository structure
 
 ```
 LetMeCook/
@@ -102,19 +102,17 @@ LetMeCook/
 └── Letmecook Demonstration (compresso).mp4   # Full app demo video
 ```
 
-## 👥 Team
+## Team
 
-| |
-|---|
-| **Dario Berti** |
-| **Savio Casano** |
-| **Riccardo Dattena** |
-| **Damiano Fusilli** |
+- **Dario Berti**
+- **Savio Casano**
+- **Riccardo Dattena**
+- **Damiano Fusilli**
 
 <div align="center">
 
 ---
 
-Made with ❤️ (and a pinch of salt) at Politecnico di Torino — MAD 2025/26
+Politecnico di Torino — Mobile Applications Development, 2025/26
 
 </div>
